@@ -80,24 +80,19 @@
 
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow eyebrow--light">Featured platform strategy</p>
+          <p class="eyebrow eyebrow--light">Featured product journey</p>
           <h1 id="hero-title">
-            Financial wellness,<br>
-            <span class="gradient-text">built to scale.</span>
+            Bulk enrollment,<br>
+            <span class="gradient-text">from upload to delivery.</span>
           </h1>
           <p class="hero-summary">
-            A unified command center for payroll card, Earned Wage Access, and client
-            operations—giving partners clearer visibility, granular control, and a
-            measurable path from daily administration to program growth.
+            A chronological view of how an employee batch moves from import and
+            rules-engine validation through Direct Deposit decisions, onboarding,
+            card provisioning, fulfillment, and delivery tracking.
           </p>
 
           <div class="hero-actions">
-            <a
-              class="button button--accent"
-              href="#"
-              data-placeholder-link
-              data-project-title="Grit B2B Portal Strategy"
-            >
+            <a class="button button--accent" href="bulk-enrollment.html">
               View Project
               <span aria-hidden="true">↗</span>
             </a>
@@ -108,85 +103,58 @@
           </div>
 
           <dl class="hero-meta" aria-label="Project details">
-            <div>
-              <dt>Focus</dt>
-              <dd>Platform strategy</dd>
-            </div>
-            <div>
-              <dt>Scope</dt>
-              <dd>Research to prototype</dd>
-            </div>
-            <div>
-              <dt>Audience</dt>
-              <dd>Enterprise partners</dd>
-            </div>
+            <div><dt>Focus</dt><dd>Bulk enrollment workflow</dd></div>
+            <div><dt>Scope</dt><dd>Portal + backend</dd></div>
+            <div><dt>Journey</dt><dd>7 connected phases</dd></div>
           </dl>
         </div>
 
-        <!-- CSS-rendered mockup placeholder. Replace this entire figure with
-             a real project image or video while keeping the figure caption. -->
-        <figure class="hero-visual" aria-label="Placeholder dashboard interface for the featured project">
+        <figure class="hero-visual hero-visual--bulk" aria-label="Illustrative bulk enrollment process interface">
           <div class="browser-frame">
             <div class="browser-bar" aria-hidden="true">
               <span></span><span></span><span></span>
-              <div class="browser-address">portal.gritfinancial.org</div>
+              <div class="browser-address">labs.gritfinancial.org/bulk-enrollment</div>
             </div>
 
-            <div class="dashboard-shell" aria-hidden="true">
-              <aside class="mock-sidebar">
-                <div class="mock-mark"></div>
-                <div class="mock-nav-line mock-nav-line--active"></div>
-                <div class="mock-nav-line"></div>
-                <div class="mock-nav-line"></div>
-                <div class="mock-nav-line"></div>
-              </aside>
+            <div class="bulk-hero-shell" aria-hidden="true">
+              <div class="bulk-hero-header">
+                <div><span>Bulk enrollment</span><strong>Review employee batch</strong></div>
+                <em>Step 3 of 7</em>
+              </div>
 
-              <div class="mock-main">
-                <div class="mock-topline">
-                  <div>
-                    <span class="mock-kicker"></span>
-                    <span class="mock-title"></span>
-                  </div>
-                  <span class="mock-avatar"></span>
+              <div class="bulk-hero-steps">
+                <span class="bulk-hero-step is-complete"><b>1</b><em>Import</em></span>
+                <span class="bulk-hero-step is-complete"><b>2</b><em>Validate</em></span>
+                <span class="bulk-hero-step is-current"><b>3</b><em>Review</em></span>
+                <span class="bulk-hero-step"><b>4</b><em>Direct Deposit</em></span>
+                <span class="bulk-hero-step"><b>5</b><em>Submit</em></span>
+                <span class="bulk-hero-step"><b>6</b><em>Process</em></span>
+                <span class="bulk-hero-step"><b>7</b><em>Track</em></span>
+              </div>
+
+              <div class="bulk-hero-content">
+                <div class="bulk-hero-table">
+                  <div class="bulk-hero-table-head"><span>Employee</span><span>Validation</span><span>Card</span></div>
+                  <div class="bulk-hero-row"><i></i><span></span><b class="is-ready">Ready</b><em>Home</em></div>
+                  <div class="bulk-hero-row"><i></i><span></span><b class="is-ready">Ready</b><em>Onsite</em></div>
+                  <div class="bulk-hero-row"><i></i><span></span><b class="is-review">Review</b><em>Office</em></div>
+                  <div class="bulk-hero-row"><i></i><span></span><b class="is-ready">Ready</b><em>Home</em></div>
                 </div>
 
-                <div class="mock-metrics">
-                  <div class="mock-metric">
-                    <span></span><strong></strong><em></em>
-                  </div>
-                  <div class="mock-metric">
-                    <span></span><strong></strong><em></em>
-                  </div>
-                  <div class="mock-metric">
-                    <span></span><strong></strong><em></em>
-                  </div>
-                </div>
-
-                <div class="mock-panels">
-                  <div class="mock-chart-card">
-                    <div class="mock-card-heading"></div>
-                    <div class="mock-chart">
-                      <span style="--bar-height: 46%"></span>
-                      <span style="--bar-height: 72%"></span>
-                      <span style="--bar-height: 58%"></span>
-                      <span style="--bar-height: 88%"></span>
-                      <span style="--bar-height: 68%"></span>
-                      <span style="--bar-height: 96%"></span>
-                    </div>
-                  </div>
-
-                  <div class="mock-activity-card">
-                    <div class="mock-card-heading"></div>
-                    <div class="mock-activity-row"><i></i><span></span><b></b></div>
-                    <div class="mock-activity-row"><i></i><span></span><b></b></div>
-                    <div class="mock-activity-row"><i></i><span></span><b></b></div>
-                    <div class="mock-activity-row"><i></i><span></span><b></b></div>
-                  </div>
-                </div>
+                <aside class="bulk-hero-summary">
+                  <span>Batch summary</span>
+                  <strong>148</strong>
+                  <p>employees imported</p>
+                  <dl>
+                    <div><dt>Ready</dt><dd>142</dd></div>
+                    <div><dt>Review</dt><dd>6</dd></div>
+                  </dl>
+                  <button type="button" tabindex="-1">Continue</button>
+                </aside>
               </div>
             </div>
           </div>
-          <figcaption>Grit B2B Portal Strategy · Featured case study</figcaption>
+          <figcaption>Bulk Enrollment Technical Journey · Featured case study</figcaption>
         </figure>
       </div>
     </section>
@@ -312,9 +280,7 @@
               </p>
               <a
                 class="card-link"
-                href="#"
-                data-placeholder-link
-                data-project-title="Instant Wage Transfer Usability Study"
+                href="instant-wage-transfer.html"
                 aria-label="View Instant Wage Transfer Usability Study project"
               >
                 View project <span aria-hidden="true">↗</span>
@@ -324,39 +290,42 @@
 
           <!-- Project card 4 of 4 -->
           <article class="project-card">
-            <div class="project-card__media project-card__media--enrollment" aria-hidden="true">
-              <div class="media-label">Prototype</div>
-              <div class="enrollment-panel">
-                <div class="enrollment-progress">
-                  <span class="is-complete"></span>
-                  <span class="is-complete"></span>
-                  <span class="is-complete"></span>
-                  <span class="is-current"></span>
-                  <span></span>
+            <div class="project-card__media project-card__media--portal" aria-hidden="true">
+              <div class="media-label">Platform strategy</div>
+              <div class="portal-preview">
+                <aside class="portal-preview__nav">
+                  <span class="portal-preview__mark"></span>
+                  <i class="is-active"></i><i></i><i></i><i></i>
+                </aside>
+                <div class="portal-preview__main">
+                  <div class="portal-preview__header"><span></span><i></i></div>
+                  <div class="portal-preview__metrics"><b></b><b></b><b></b></div>
+                  <div class="portal-preview__body">
+                    <div class="portal-preview__chart">
+                      <span style="--portal-bar:42%"></span>
+                      <span style="--portal-bar:68%"></span>
+                      <span style="--portal-bar:54%"></span>
+                      <span style="--portal-bar:86%"></span>
+                      <span style="--portal-bar:73%"></span>
+                    </div>
+                    <div class="portal-preview__list"><i></i><i></i><i></i><i></i></div>
+                  </div>
                 </div>
-                <div class="enrollment-title"></div>
-                <div class="employee-row"><i></i><span></span><b>Ready</b></div>
-                <div class="employee-row"><i></i><span></span><b>Ready</b></div>
-                <div class="employee-row"><i></i><span></span><b>Review</b></div>
-                <div class="enrollment-action"></div>
               </div>
             </div>
             <div class="project-card__body">
-              <div class="project-card__meta">
-                <span>Product design</span>
-                <span>Workflow</span>
-              </div>
-              <h3>Bulk Enrollment Experience</h3>
+              <div class="project-card__meta"><span>Platform strategy</span><span>Enterprise UX</span></div>
+              <h3>Grit B2B Portal Strategy</h3>
               <p>
-                An end-to-end employer workflow for validating employee data, enrolling
-                workers, and preparing card distribution with fewer operational gaps.
+                A unified command center for payroll-card and Earned Wage Access
+                operations, designed for complex partner hierarchies and clearer control.
               </p>
               <a
                 class="card-link"
                 href="#"
                 data-placeholder-link
-                data-project-title="Bulk Enrollment Experience"
-                aria-label="View Bulk Enrollment Experience project"
+                data-project-title="Grit B2B Portal Strategy"
+                aria-label="View Grit B2B Portal Strategy project"
               >
                 View project <span aria-hidden="true">↗</span>
               </a>
@@ -468,14 +437,14 @@
             <div class="archive-index">06</div>
             <div class="archive-copy">
               <p>Strategy · Analytics</p>
-              <h3>Financial Wellness Reporting Framework</h3>
+              <h3>Program Performance Reporting Framework</h3>
             </div>
             <span class="archive-year">2026</span>
             <a
               href="#"
               data-placeholder-link
-              data-project-title="Financial Wellness Reporting Framework"
-              aria-label="View Financial Wellness Reporting Framework project"
+              data-project-title="Program Performance Reporting Framework"
+              aria-label="View Program Performance Reporting Framework project"
             ><span aria-hidden="true">↗</span></a>
           </article>
         </div>
@@ -544,7 +513,7 @@
           width="156"
           height="65"
         >
-        <p>Strategy and product work for scalable financial wellness.</p>
+        <p>Strategy and product work for modern financial operations.</p>
       </div>
 
       <div class="footer-nav">

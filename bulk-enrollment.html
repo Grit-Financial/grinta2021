@@ -1,0 +1,1790 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Grit Labs technical journey for bulk employee enrollment, separating the Customer Journey on Portal (Steps 1-5) from the Backend Process (Step 6 through delivery tracking).">
+  <meta name="theme-color" content="#000000">
+  <title>Bulk Enrollment Technical Journey | Grit Financial</title>
+  <link rel="icon" type="image/png" href="assets/Grit_FavIcon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Work+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111111;
+      --ink-2: #24242a;
+      --magenta: #ff36d7;
+      --magenta-deep: #a800aa;
+      --blue: #3395ff;
+      --blue-deep: #1768b8;
+      --green: #159b69;
+      --amber: #c98200;
+      --red: #c7444b;
+      --muted: #686a72;
+      --line: #e7e7eb;
+      --surface: #f7f7f9;
+      --surface-2: #efeff3;
+      --white: #ffffff;
+      --radius: 22px;
+      --radius-sm: 15px;
+      --shadow: 0 18px 50px rgba(17, 17, 17, .08);
+      --shadow-strong: 0 26px 80px rgba(17, 17, 17, .14);
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; scroll-padding-top: 154px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--surface);
+      font-family: "Source Sans 3", Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body::selection { background: rgba(255, 54, 215, .24); }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img { max-width: 100%; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1, h2, h3, h4 { font-family: "Work Sans", Arial, sans-serif; }
+    strong { font-weight: 700; }
+
+    .skip-link {
+      position: fixed;
+      left: 18px;
+      top: -60px;
+      z-index: 100;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--ink);
+      background: var(--magenta);
+      font-weight: 800;
+      transition: top .2s ease;
+    }
+    .skip-link:focus { top: 18px; }
+
+    .topbar {
+      min-height: 76px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px clamp(22px, 5vw, 72px);
+      color: var(--white);
+      background: #000;
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      min-width: 0;
+    }
+    .brand img {
+      display: block;
+      width: 118px;
+      max-height: 40px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    .brand-fallback {
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+    .brand-label {
+      color: #c7c7cc;
+      border-left: 1px solid #444;
+      padding-left: 15px;
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .top-link,
+    .top-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid #37373c;
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: #e8e8eb;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .top-link:hover,
+    .top-link:focus-visible,
+    .top-button:hover,
+    .top-button:focus-visible {
+      color: var(--white);
+      border-color: var(--magenta);
+      background: rgba(255, 54, 215, .10);
+      outline: none;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 84% 15%, rgba(51, 149, 255, .34), transparent 28%),
+        radial-gradient(circle at 72% 56%, rgba(255, 54, 215, .23), transparent 28%),
+        linear-gradient(135deg, #08080a 0%, #111117 55%, #08080a 100%);
+      border-bottom: 1px solid #1e1e24;
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 520px;
+      height: 520px;
+      right: -210px;
+      top: -235px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      box-shadow:
+        0 0 0 48px rgba(255, 255, 255, .025),
+        0 0 0 96px rgba(255, 255, 255, .018),
+        0 0 0 144px rgba(255, 255, 255, .012);
+    }
+    .hero::after {
+      width: 360px;
+      height: 360px;
+      left: -230px;
+      bottom: -280px;
+      background: rgba(255, 54, 215, .20);
+      filter: blur(18px);
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), calc(100% - 56px));
+      margin: 0 auto;
+      padding: clamp(66px, 8vw, 108px) 0 clamp(58px, 7vw, 92px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, .6fr);
+      gap: clamp(34px, 6vw, 78px);
+      align-items: end;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 17px;
+      color: #f0b9ff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 30px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--magenta), var(--blue));
+    }
+    .hero h1 {
+      max-width: 850px;
+      margin: 0 0 24px;
+      font-size: clamp(45px, 6.6vw, 88px);
+      line-height: .96;
+      letter-spacing: -.055em;
+    }
+    .gradient-text {
+      background: linear-gradient(105deg, var(--magenta) 10%, #df5eff 44%, var(--blue) 92%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-copy {
+      max-width: 770px;
+      margin: 0;
+      color: #d7d7dd;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.55;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border-radius: 999px;
+      padding: 11px 18px;
+      border: 1px solid transparent;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .button:hover,
+    .button:focus-visible { transform: translateY(-2px); outline: none; }
+    .button-primary {
+      color: var(--ink);
+      background: linear-gradient(100deg, var(--magenta), #ef68f6 50%, var(--blue));
+      box-shadow: 0 13px 34px rgba(255, 54, 215, .20);
+    }
+    .button-secondary {
+      color: var(--white);
+      background: rgba(255, 255, 255, .06);
+      border-color: rgba(255, 255, 255, .18);
+    }
+    .button-secondary:hover,
+    .button-secondary:focus-visible { background: rgba(255, 255, 255, .11); }
+
+    .hero-panel {
+      position: relative;
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .065);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, .24);
+      backdrop-filter: blur(12px);
+    }
+    .hero-panel-kicker {
+      margin: 0 0 14px;
+      color: #b8b8c2;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .hero-panel h2 {
+      margin: 0 0 22px;
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: -.025em;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+    }
+    .hero-stat {
+      padding: 15px 10px 13px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, .28);
+      border: 1px solid rgba(255, 255, 255, .08);
+      text-align: center;
+    }
+    .hero-stat strong {
+      display: block;
+      margin-bottom: 4px;
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 25px;
+      line-height: 1;
+    }
+    .hero-stat span { color: #bebec8; font-size: 12px; line-height: 1.2; }
+    .end-state {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, .12);
+      display: grid;
+      gap: 9px;
+    }
+    .end-state-row {
+      display: grid;
+      grid-template-columns: 25px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #dedee5;
+      font-size: 14px;
+    }
+    .end-state-row span:first-child {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--ink);
+      background: var(--magenta);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .anchor-nav {
+      position: sticky;
+      top: 76px;
+      z-index: 40;
+      color: var(--ink);
+      background: rgba(255, 255, 255, .95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+    .anchor-nav-inner {
+      width: min(var(--max), calc(100% - 56px));
+      min-height: 62px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .anchor-nav-inner::-webkit-scrollbar { display: none; }
+    .anchor-links { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .anchor-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #55565f;
+      font-size: 14px;
+      font-weight: 700;
+      transition: color .18s ease, background .18s ease;
+    }
+    .anchor-link:hover,
+    .anchor-link:focus-visible,
+    .anchor-link.active {
+      color: var(--ink);
+      background: #f0e9f6;
+      outline: none;
+    }
+    .anchor-link span {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--ink);
+      font-size: 11px;
+    }
+    .anchor-utility {
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--magenta-deep);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .anchor-utility:hover,
+    .anchor-utility:focus-visible { background: #f7edf8; outline: none; }
+
+    main { display: block; }
+    .section {
+      width: min(var(--max), calc(100% - 56px));
+      margin: 0 auto;
+      padding: clamp(64px, 8vw, 102px) 0;
+    }
+    .section + .section { border-top: 1px solid var(--line); }
+    .section-head {
+      max-width: 850px;
+      margin-bottom: 38px;
+    }
+    .section-head .eyebrow { color: var(--magenta-deep); }
+    .section-head h2 {
+      margin: 0 0 15px;
+      font-size: clamp(34px, 4.5vw, 58px);
+      line-height: 1.04;
+      letter-spacing: -.045em;
+    }
+    .section-head > p:last-child {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .overview-shell {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 40px);
+      overflow: hidden;
+    }
+    .overview-shell::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -120px;
+      top: -145px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 54, 215, .12), rgba(51, 149, 255, .16));
+    }
+    .overview-labels {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .overview-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 36px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+    .overview-label strong {
+      flex: 0 0 auto;
+      padding-left: 10px;
+      border-left: 1px solid currentColor;
+      font-size: 10px;
+      letter-spacing: .045em;
+      opacity: .72;
+    }
+    .label-portal {
+      grid-column: 1 / span 5;
+      color: #8f0e86;
+      background: linear-gradient(90deg, #fdeafb, #f4eaff);
+    }
+    .label-backend {
+      grid-column: 6 / span 2;
+      color: #155f9f;
+      background: linear-gradient(90deg, #e9f4ff, #e8f8f2);
+    }
+    .overview-track {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+    .overview-track::before {
+      content: "";
+      position: absolute;
+      left: 4.5%;
+      right: 4.5%;
+      top: 25px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--magenta), #a85aff 46%, var(--blue) 76%, var(--green));
+      border-radius: 99px;
+      opacity: .55;
+    }
+    .overview-step {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .overview-node {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+      border: 5px solid var(--white);
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--ink);
+      box-shadow: 0 0 0 1px var(--line), 0 8px 18px rgba(17, 17, 17, .10);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .overview-step:nth-child(1) .overview-node,
+    .overview-step:nth-child(2) .overview-node,
+    .overview-step:nth-child(3) .overview-node { background: linear-gradient(145deg, var(--magenta-deep), var(--magenta)); }
+    .overview-step:nth-child(4) .overview-node,
+    .overview-step:nth-child(5) .overview-node { background: linear-gradient(145deg, #7c2cd0, #b553ef); }
+    .overview-step:nth-child(6) .overview-node { background: linear-gradient(145deg, var(--blue-deep), var(--blue)); }
+    .overview-step:nth-child(7) .overview-node { background: linear-gradient(145deg, #087e58, #27b581); }
+    .overview-card {
+      flex: 1;
+      min-height: 205px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 15px 15px;
+      background: #fbfbfc;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .overview-card:hover { transform: translateY(-4px); border-color: #d6d6dd; box-shadow: 0 12px 30px rgba(17, 17, 17, .08); }
+    .overview-kicker {
+      margin: 0 0 8px;
+      color: var(--magenta-deep);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .overview-step:nth-child(4) .overview-kicker,
+    .overview-step:nth-child(5) .overview-kicker { color: #7424a9; }
+    .overview-step:nth-child(6) .overview-kicker { color: var(--blue-deep); }
+    .overview-step:nth-child(7) .overview-kicker { color: #087e58; }
+    .overview-card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+    }
+    .overview-card p {
+      margin: 0 0 15px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.42;
+    }
+    .overview-output {
+      display: inline-flex;
+      margin-top: auto;
+      padding: 5px 8px;
+      border-radius: 8px;
+      color: #56565f;
+      background: #eeeef2;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .decision-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .decision-summary {
+      min-height: 138px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 19px;
+      background: var(--white);
+    }
+    .decision-summary .mini-tag { margin-bottom: 11px; }
+    .decision-summary h3 { margin: 0 0 7px; font-size: 18px; line-height: 1.2; }
+    .decision-summary p { margin: 0; color: var(--muted); font-size: 14px; }
+    .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--magenta-deep);
+      background: #fceafa;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .mini-tag.blue { color: var(--blue-deep); background: #e8f3ff; }
+    .mini-tag.green { color: #087e58; background: #e5f7f0; }
+    .mini-tag.amber { color: #8c5e00; background: #fff3d6; }
+    .mini-tag.red { color: #9f3037; background: #fdebed; }
+
+    .flow-classification {
+      display: grid;
+      grid-template-columns: 5fr 2fr;
+      gap: 14px;
+      margin: 0 0 26px 88px;
+    }
+    .flow-classification-card {
+      position: relative;
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 17px 20px;
+      overflow: hidden;
+    }
+    .flow-classification-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+    }
+    .flow-classification-card.portal { background: linear-gradient(135deg, #fff7fe, #faf7ff); }
+    .flow-classification-card.portal::before { background: linear-gradient(180deg, var(--magenta), #8f49e5); }
+    .flow-classification-card.backend { background: linear-gradient(135deg, #f2f8ff, #f0fbf7); }
+    .flow-classification-card.backend::before { background: linear-gradient(180deg, var(--blue), var(--green)); }
+    .flow-classification-card span {
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .flow-classification-card strong {
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .journey {
+      position: relative;
+      display: grid;
+      gap: 24px;
+    }
+    .journey::before {
+      content: "";
+      position: absolute;
+      left: 33px;
+      top: 44px;
+      bottom: 48px;
+      width: 3px;
+      border-radius: 99px;
+      background: linear-gradient(180deg, var(--magenta), #9b55ee 52%, var(--blue) 78%, var(--green));
+      opacity: .45;
+    }
+    .journey-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+      scroll-margin-top: 164px;
+    }
+    .journey-marker {
+      position: sticky;
+      top: 157px;
+      z-index: 2;
+      width: 68px;
+      height: 68px;
+      display: grid;
+      place-items: center;
+      border: 7px solid var(--surface);
+      border-radius: 50%;
+      color: var(--white);
+      background: linear-gradient(145deg, var(--magenta-deep), var(--magenta));
+      box-shadow: 0 0 0 1px var(--line), 0 10px 24px rgba(17, 17, 17, .10);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+    }
+    .journey-item:nth-child(4) .journey-marker,
+    .journey-item:nth-child(5) .journey-marker { background: linear-gradient(145deg, #6c21bb, #b553ef); }
+    .journey-item:nth-child(6) .journey-marker { background: linear-gradient(145deg, var(--blue-deep), var(--blue)); }
+    .journey-item:nth-child(7) .journey-marker { background: linear-gradient(145deg, #087e58, #27b581); }
+    .journey-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--white);
+      box-shadow: 0 10px 30px rgba(17, 17, 17, .045);
+      overflow: hidden;
+    }
+    .journey-card::before {
+      content: "";
+      display: block;
+      height: 6px;
+      background: linear-gradient(90deg, var(--magenta), var(--blue));
+    }
+    .journey-item:nth-child(4) .journey-card::before,
+    .journey-item:nth-child(5) .journey-card::before { background: linear-gradient(90deg, #7c2cd0, #cb61f4); }
+    .journey-item:nth-child(6) .journey-card::before { background: linear-gradient(90deg, var(--blue-deep), var(--blue)); }
+    .journey-item:nth-child(7) .journey-card::before { background: linear-gradient(90deg, #087e58, #27b581); }
+    .journey-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: start;
+      padding: clamp(24px, 4vw, 38px) clamp(24px, 4vw, 40px) 23px;
+      border-bottom: 1px solid var(--line);
+    }
+    .journey-label-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .journey-kicker {
+      margin: 0;
+      color: var(--magenta-deep);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .phase-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .065em;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+    .phase-chip.portal { color: #8f0e86; background: #fdeafb; }
+    .phase-chip.backend { color: #155f9f; background: #e9f4ff; }
+    .journey-item:nth-child(4) .journey-kicker,
+    .journey-item:nth-child(5) .journey-kicker { color: #7424a9; }
+    .journey-item:nth-child(6) .journey-kicker { color: var(--blue-deep); }
+    .journey-item:nth-child(7) .journey-kicker { color: #087e58; }
+    .journey-header h3 {
+      margin: 0 0 10px;
+      font-size: clamp(25px, 3vw, 37px);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+    .journey-summary {
+      max-width: 790px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .outcome-badge {
+      max-width: 160px;
+      padding: 8px 10px;
+      border-radius: 11px;
+      color: #575761;
+      background: #f0f0f3;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .045em;
+      line-height: 1.25;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .journey-body { padding: 28px clamp(24px, 4vw, 40px) 34px; }
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .content-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .content-block {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      background: #fbfbfc;
+    }
+    .content-block h4 { margin: 0 0 10px; font-size: 18px; line-height: 1.2; }
+    .content-block p:last-child { margin-bottom: 0; }
+    .content-block p,
+    .content-block li { color: #565861; }
+    .content-block ul,
+    .content-block ol { margin: 0; padding-left: 20px; }
+    .content-block li + li { margin-top: 7px; }
+    .content-block.full { grid-column: 1 / -1; }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .route-card {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 18px;
+      background: var(--white);
+      overflow: hidden;
+    }
+    .route-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--magenta);
+    }
+    .route-card:nth-child(2)::before { background: #a454e6; }
+    .route-card:nth-child(3)::before { background: var(--blue); }
+    .route-card h4 { margin: 0 0 7px; font-size: 18px; }
+    .route-card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .choice-card {
+      min-height: 145px;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px 18px 18px;
+      background: #fbfbfc;
+    }
+    .choice-letter {
+      position: absolute;
+      right: 14px;
+      top: 13px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--ink);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .choice-card h4 { margin: 7px 0 7px; font-size: 22px; }
+    .choice-card p { margin: 0; color: var(--muted); }
+
+    .process-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 11px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+    .process-node {
+      position: relative;
+      min-height: 165px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 17px 15px;
+      background: #fbfbfc;
+    }
+    .process-node:not(:last-child)::after {
+      content: "\2192";
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      z-index: 2;
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--blue-deep);
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .process-index {
+      display: inline-grid;
+      place-items: center;
+      min-width: 30px;
+      height: 25px;
+      margin-bottom: 12px;
+      padding: 0 7px;
+      border-radius: 7px;
+      color: var(--blue-deep);
+      background: #e7f3ff;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .process-node h4 { margin: 0 0 7px; font-size: 17px; line-height: 1.15; }
+    .process-node p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+
+    .decision-lanes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .decision-lane {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      background: #fbfbfc;
+    }
+    .decision-lane h4 { margin: 0 0 6px; font-size: 19px; }
+    .decision-lane > p { margin: 0 0 17px; color: var(--muted); }
+    .decision-question {
+      width: min(230px, 100%);
+      margin: 0 auto 14px;
+      padding: 13px 15px;
+      border: 2px solid #cfcfd6;
+      border-radius: 14px;
+      background: var(--white);
+      text-align: center;
+      font-weight: 800;
+    }
+    .branch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .branch {
+      min-height: 98px;
+      border-radius: 13px;
+      padding: 13px;
+      font-size: 14px;
+    }
+    .branch strong { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    .branch.yes { color: #075d43; background: #e3f7ef; border: 1px solid #b9ead8; }
+    .branch.no { color: #96343a; background: #fdebed; border: 1px solid #f3c7ca; }
+
+    details.technical {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--white);
+      overflow: hidden;
+    }
+    details.technical summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 15px 17px;
+      color: var(--ink-2);
+      font-weight: 800;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.technical summary::-webkit-details-marker { display: none; }
+    details.technical summary::after {
+      content: "+";
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--ink);
+      font-size: 17px;
+      line-height: 1;
+    }
+    details.technical[open] summary::after { content: "\2212"; }
+    details.technical[open] summary { border-bottom: 1px solid var(--line); }
+    .technical-content { padding: 17px; }
+    .technical-content p:last-child,
+    .technical-content ul:last-child { margin-bottom: 0; }
+    .technical-content li + li { margin-top: 6px; }
+
+    .integration-band {
+      margin-top: 22px;
+      border-radius: 18px;
+      padding: 18px 20px;
+      color: var(--white);
+      background: #111117;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .integration-title {
+      margin-right: 5px;
+      color: #cfcfd7;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .integration-pill {
+      padding: 7px 10px;
+      border: 1px solid #35353d;
+      border-radius: 999px;
+      color: #e8e8ed;
+      background: #202028;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .finalization-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .final-chip {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 12px;
+      background: var(--white);
+      color: #4c4d55;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .final-chip span:first-child {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--blue-deep);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 15px;
+    }
+    .roadmap-card {
+      min-height: 250px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px 19px 19px;
+      background: var(--white);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .roadmap-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .roadmap-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      right: -65px;
+      top: -65px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 54, 215, .24), rgba(51, 149, 255, .22));
+    }
+    .roadmap-index {
+      display: inline-grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
+      margin-bottom: 24px;
+      border-radius: 12px;
+      color: var(--white);
+      background: var(--ink);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .roadmap-card h3 { margin: 0 0 9px; font-size: 20px; line-height: 1.18; }
+    .roadmap-card p { margin: 0; color: var(--muted); font-size: 14px; }
+    .source-note {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 13px;
+      align-items: start;
+      border: 1px solid #e4d3e8;
+      border-radius: 15px;
+      padding: 17px;
+      color: #5a4b5f;
+      background: #fbf4fc;
+    }
+    .source-note span:first-child {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--magenta-deep);
+      font-family: Georgia, serif;
+      font-weight: 700;
+    }
+    .source-note p { margin: 0; }
+
+    .page-footer {
+      color: #b9b9c2;
+      background: #000;
+      border-top: 4px solid transparent;
+      border-image: linear-gradient(90deg, var(--magenta), var(--blue)) 1;
+    }
+    .footer-inner {
+      width: min(var(--max), calc(100% - 56px));
+      min-height: 98px;
+      margin: 0 auto;
+      padding: 25px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .footer-brand { color: var(--white); font-family: "Work Sans", Arial, sans-serif; font-weight: 800; }
+    .footer-copy { font-size: 13px; }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; justify-content: flex-end; }
+    .footer-links a { font-size: 13px; font-weight: 700; }
+    .footer-links a:hover,
+    .footer-links a:focus-visible { color: var(--magenta); outline: none; }
+
+    @media (max-width: 1050px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-panel { max-width: 650px; }
+      .overview-track { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 24px; }
+      .overview-track::before { display: none; }
+      .decision-strip { grid-template-columns: 1fr 1fr; }
+      .content-grid.three { grid-template-columns: 1fr 1fr; }
+      .process-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .process-node:not(:last-child)::after { display: none; }
+      .roadmap-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .finalization-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 790px) {
+      html { scroll-padding-top: 136px; }
+      .topbar { min-height: 70px; padding: 13px 20px; }
+      .brand-label { display: none; }
+      .top-actions .top-button { display: none; }
+      .top-link { min-height: 36px; padding: 7px 11px; }
+      .hero-inner,
+      .anchor-nav-inner,
+      .section,
+      .footer-inner { width: min(100% - 36px, var(--max)); }
+      .anchor-nav { top: 70px; }
+      .anchor-nav-inner { min-height: 56px; }
+      .anchor-utility { display: none; }
+      .overview-labels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .label-portal,
+      .label-backend { grid-column: auto; }
+      .overview-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow-classification { grid-template-columns: 1fr 1fr; margin-left: 65px; }
+      .decision-strip,
+      .content-grid,
+      .content-grid.three,
+      .route-grid,
+      .choice-grid,
+      .decision-lanes { grid-template-columns: 1fr; }
+      .journey::before { left: 25px; }
+      .journey-item { grid-template-columns: 52px minmax(0, 1fr); gap: 13px; }
+      .journey-marker {
+        width: 52px;
+        height: 52px;
+        top: 137px;
+        border-width: 5px;
+        font-size: 17px;
+      }
+      .journey-header { grid-template-columns: 1fr; }
+      .outcome-badge { max-width: none; justify-self: start; }
+      .process-flow { grid-template-columns: 1fr 1fr; }
+      .roadmap-grid { grid-template-columns: 1fr 1fr; }
+      .finalization-grid { grid-template-columns: 1fr 1fr; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+      .footer-links { justify-content: flex-start; }
+    }
+
+    @media (max-width: 520px) {
+      .brand img { width: 98px; }
+      .brand-fallback { font-size: 24px; }
+      .top-link span { display: none; }
+      .hero-inner { padding-top: 56px; }
+      .hero h1 { font-size: clamp(43px, 14vw, 62px); }
+      .hero-panel { padding: 20px; }
+      .hero-stats { gap: 6px; }
+      .hero-stat { padding-inline: 5px; }
+      .hero-stat strong { font-size: 21px; }
+      .overview-labels { grid-template-columns: 1fr; }
+      .overview-label { border-radius: 16px; }
+      .overview-track { grid-template-columns: 1fr; }
+      .flow-classification { grid-template-columns: 1fr; margin-left: 52px; }
+      .overview-step { display: grid; grid-template-columns: 48px 1fr; gap: 13px; align-items: start; }
+      .overview-node { width: 46px; height: 46px; margin: 0; }
+      .overview-card { min-height: 0; }
+      .section-head h2 { font-size: 36px; }
+      .journey-item { grid-template-columns: 42px minmax(0, 1fr); gap: 10px; }
+      .journey::before { left: 20px; }
+      .journey-marker { width: 42px; height: 42px; top: 134px; border-width: 4px; font-size: 14px; }
+      .journey-header,
+      .journey-body { padding-left: 19px; padding-right: 19px; }
+      .process-flow,
+      .branch-grid,
+      .roadmap-grid,
+      .finalization-grid { grid-template-columns: 1fr; }
+      .footer-inner { min-height: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+    }
+
+    @media print {
+      @page { size: landscape; margin: 10mm; }
+      body { background: var(--white); font-size: 10pt; }
+      .topbar, .anchor-nav, .hero-actions, .page-footer { display: none !important; }
+      .hero { color: var(--ink); background: var(--white); border: 0; }
+      .hero::before, .hero::after { display: none; }
+      .hero-inner { width: 100%; padding: 10mm 0 7mm; grid-template-columns: 1.6fr .7fr; }
+      .hero-copy { color: #444; }
+      .hero-panel { color: var(--ink); background: #f5f5f7; box-shadow: none; border-color: var(--line); }
+      .hero-panel-kicker, .hero-stat span, .end-state-row { color: #444; }
+      .hero-stat { background: var(--white); }
+      .gradient-text { color: var(--ink); background: none; }
+      .section { width: 100%; padding: 10mm 0; }
+      .section + .section { page-break-before: always; }
+      .overview-shell, .journey-card, .roadmap-card { box-shadow: none; }
+      .journey-marker { position: relative; top: auto; border-color: var(--white); }
+      details.technical:not([open]) > *:not(summary) { display: block; }
+      .roadmap-grid { grid-template-columns: repeat(5, 1fr); }
+      .roadmap-card { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to the technical journey</a>
+
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Back to Grit Financial portfolio">
+      <img src="assets/Grit_Logo_RGB.png" alt="Grit Financial" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+      <span class="brand-fallback" hidden>GRIT</span>
+      <span class="brand-label">Portfolio</span>
+    </a>
+    <div class="top-actions">
+      <a class="top-link" href="index.html" aria-label="Back to the portfolio"><span aria-hidden="true">&larr;&nbsp;</span>Portfolio</a>
+      <button class="top-button" type="button" data-print>Print / PDF</button>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">Grit Portfolio / Technical journey</p>
+        <h1 id="page-title">Bulk enrollment, <span class="gradient-text">in chronological order.</span></h1>
+        <p class="hero-copy">A source-grounded view of how a batch moves from employee import and rules-engine validation through onboarding, card provisioning, fulfillment, and USPS delivery tracking.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#overview">View the timeline</a>
+          <a class="button button-secondary" href="index.html#featured-projects">Back to portfolio</a>
+        </div>
+      </div>
+
+      <aside class="hero-panel" aria-label="Journey summary">
+        <p class="hero-panel-kicker">At a glance</p>
+        <h2>One batch, seven connected phases</h2>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>7</strong><span>chronological phases</span></div>
+          <div class="hero-stat"><strong>3</strong><span>card delivery paths</span></div>
+          <div class="hero-stat"><strong>6</strong><span>named integrations</span></div>
+        </div>
+        <div class="end-state">
+          <div class="end-state-row"><span>1</span><div>User is marked <strong>ONBOARDED</strong>.</div></div>
+          <div class="end-state-row"><span>2</span><div>Card fulfillment is initiated or linked.</div></div>
+          <div class="end-state-row"><span>3</span><div>Delivery data and USPS tracking are retained.</div></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <nav class="anchor-nav" aria-label="Technical journey sections">
+    <div class="anchor-nav-inner">
+      <div class="anchor-links">
+        <a class="anchor-link active" href="#overview" data-nav="overview"><span>1</span>Overview</a>
+        <a class="anchor-link" href="#journey" data-nav="journey"><span>2</span>Detailed flow</a>
+        <a class="anchor-link" href="#roadmap" data-nav="roadmap"><span>3</span>Iteration 2</a>
+      </div>
+      <button class="anchor-utility" type="button" data-expand-all aria-pressed="false">Expand technical details</button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <section class="section" id="overview" aria-labelledby="overview-title">
+      <div class="section-head">
+        <p class="eyebrow">Executive overview</p>
+        <h2 id="overview-title">The entire process on one timeline</h2>
+        <p>Steps 1 through 5 are the Customer Journey on Portal. Step 6 through the end of the flow are the Backend Process, covering automated onboarding, card fulfillment, and delivery tracking.</p>
+      </div>
+
+      <div class="overview-shell">
+        <div class="overview-labels" aria-label="Flow groups">
+          <span class="overview-label label-portal"><span>Customer Journey on Portal</span><strong>Steps 1-5</strong></span>
+          <span class="overview-label label-backend"><span>Backend Process</span><strong>Step 6-End</strong></span>
+        </div>
+
+        <div class="overview-track" aria-label="Seven-step bulk enrollment timeline">
+          <article class="overview-step">
+            <div class="overview-node">1</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Import</p>
+              <h3>Load employees</h3>
+              <p>Employee screen or .xlsx upload becomes a draft batch.</p>
+              <span class="overview-output">Input &rarr; Draft</span>
+            </div>
+          </article>
+          <article class="overview-step">
+            <div class="overview-node">2</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Validate</p>
+              <h3>Apply rules</h3>
+              <p>Check duplicates, required fields, delivery rules, and integration constraints.</p>
+              <span class="overview-output">Pass / fail reasons</span>
+            </div>
+          </article>
+          <article class="overview-step">
+            <div class="overview-node">3</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Review</p>
+              <h3>Resolve exceptions</h3>
+              <p>Advance eligible employees; unresolved rows remain on the watchlist.</p>
+              <span class="overview-output">Approved employees</span>
+            </div>
+          </article>
+          <article class="overview-step">
+            <div class="overview-node">4</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Set Direct Deposit</p>
+              <h3>Choose timing</h3>
+              <p>Tenant or Company Admin selects no switch, immediate, or deferred.</p>
+              <span class="overview-output">Direct Deposit instruction</span>
+            </div>
+          </article>
+          <article class="overview-step">
+            <div class="overview-node">5</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Submit</p>
+              <h3>Approve the batch</h3>
+              <p>Download the final .xlsx for sign-off, then submit for processing.</p>
+              <span class="overview-output">Approved batch</span>
+            </div>
+          </article>
+          <article class="overview-step">
+            <div class="overview-node">6</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Process</p>
+              <h3>Create and onboard</h3>
+              <p>Create records, run KYC and employment checks, provision the card, log, and notify.</p>
+              <span class="overview-output">ONBOARDED user</span>
+            </div>
+          </article>
+          <article class="overview-step">
+            <div class="overview-node">7</div>
+            <div class="overview-card">
+              <p class="overview-kicker">Track</p>
+              <h3>Retain fulfillment</h3>
+              <p>Store delivery data in the User table and shipment data in the USPS tracker.</p>
+              <span class="overview-output">Delivery tracking</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="decision-strip" aria-label="Critical decision summary">
+        <article class="decision-summary">
+          <span class="mini-tag">Card path</span>
+          <h3>Delivery choice determines card handling</h3>
+          <p>Onsite uses anonymized cards delivered to the office. Home and Office use personalized cards.</p>
+        </article>
+        <article class="decision-summary">
+          <span class="mini-tag blue">Employment</span>
+          <h3>Employment status gates Direct Deposit</h3>
+          <p>Verified employees receive the selected Direct Deposit behavior. Pre-hire employees do not switch Direct Deposit.</p>
+        </article>
+        <article class="decision-summary">
+          <span class="mini-tag green">Operational outcome</span>
+          <h3>Each employee remains auditable and notified</h3>
+          <p>Submission and employee events are logged, failures are stored, and email or SMS is sent.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="journey" aria-labelledby="journey-title">
+      <div class="section-head">
+        <p class="eyebrow">Detailed flow</p>
+        <h2 id="journey-title">What happens at every phase</h2>
+        <p>The detailed timeline retains the source terminology, business rules, integrations, and decision branches that move each employee forward.</p>
+      </div>
+
+      <div class="flow-classification" aria-label="Flow classification">
+        <div class="flow-classification-card portal">
+          <span>Steps 1-5</span>
+          <strong>Customer Journey on Portal</strong>
+        </div>
+        <div class="flow-classification-card backend">
+          <span>Step 6-End</span>
+          <strong>Backend Process</strong>
+        </div>
+      </div>
+
+      <div class="journey">
+        <article class="journey-item" id="step-1" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">1</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Import &amp; initial review</p><span class="phase-chip portal">Customer Journey on Portal</span></div>
+                <h3>Create the draft batch</h3>
+                <p class="journey-summary">Employee rows enter through the employee screen or an .xlsx upload and are staged before any rules-engine processing begins.</p>
+              </div>
+              <span class="outcome-badge">Output: Draft batch</span>
+            </header>
+            <div class="journey-body">
+              <div class="content-grid">
+                <div class="content-block">
+                  <span class="mini-tag">Input</span>
+                  <h4>Two import methods</h4>
+                  <ul>
+                    <li>Employee screen interface.</li>
+                    <li>.xlsx file upload.</li>
+                  </ul>
+                </div>
+                <div class="content-block">
+                  <span class="mini-tag blue">System action</span>
+                  <h4>Rows become a draft</h4>
+                  <p>The system loads imported rows into a working draft for validation and administrator review.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="journey-item" id="step-2" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">2</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Validation &amp; verification</p><span class="phase-chip portal">Customer Journey on Portal</span></div>
+                <h3>Apply the rules engine before employees can advance</h3>
+                <p class="journey-summary">The validation gate protects downstream onboarding by testing uniqueness, field formats, delivery requirements, and re-onboarding conditions.</p>
+              </div>
+              <span class="outcome-badge">Output: Pass / fail reasons</span>
+            </header>
+            <div class="journey-body">
+              <div class="content-grid three">
+                <div class="content-block">
+                  <span class="mini-tag">Identity &amp; uniqueness</span>
+                  <h4>Find duplicates</h4>
+                  <ul>
+                    <li>Detect across SSN, Email/Phone, and Date of Birth.</li>
+                    <li>Require unique SSN4 + Date of Birth per employee.</li>
+                    <li>Check name formatting only; identity is not validated here.</li>
+                  </ul>
+                </div>
+                <div class="content-block">
+                  <span class="mini-tag blue">Re-onboarding</span>
+                  <h4>Block duplicate journeys</h4>
+                  <ul>
+                    <li>Block already-onboarded employees.</li>
+                    <li>Block users who began through the standard flow or a marketing link.</li>
+                  </ul>
+                </div>
+                <div class="content-block">
+                  <span class="mini-tag green">Field rules</span>
+                  <h4>Keep downstream data valid</h4>
+                  <ul>
+                    <li>Address format validation, including the legacy ZIP limitation for Corecard.</li>
+                    <li>Proxy and Card Last 4 must be numeric.</li>
+                    <li>International phone numbers are supported for Fortuna only.</li>
+                  </ul>
+                </div>
+                <div class="content-block full">
+                  <span class="mini-tag amber">Delivery requirements</span>
+                  <h4>Mandatory fields change with the card-delivery option</h4>
+                  <div class="route-grid">
+                    <div class="route-card"><h4>Onsite</h4><p>Anonymized cards are always delivered to the office.</p></div>
+                    <div class="route-card"><h4>Home</h4><p>Personalized cards are delivered home; a home address is required.</p></div>
+                    <div class="route-card"><h4>Office</h4><p>Personalized cards are delivered to the office; each employee's home address is also required.</p></div>
+                  </div>
+                </div>
+              </div>
+              <details class="technical">
+                <summary>Why this is a hard gate</summary>
+                <div class="technical-content">
+                  <p>Employees do not move directly from import into account creation. The draft must first satisfy the rules tied to uniqueness, required data, card delivery, and downstream system compatibility.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </article>
+
+        <article class="journey-item" id="step-3" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">3</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Draft &amp; watchlist</p><span class="phase-chip portal">Customer Journey on Portal</span></div>
+                <h3>Turn validation results into an actionable review</h3>
+                <p class="journey-summary">The interface explains which rows passed or failed and lets the administrator resolve issues without blocking the entire batch.</p>
+              </div>
+              <span class="outcome-badge">Output: Approved employees</span>
+            </header>
+            <div class="journey-body">
+              <div class="content-grid">
+                <div class="content-block">
+                  <span class="mini-tag">Administrator actions</span>
+                  <h4>Review and select</h4>
+                  <ul>
+                    <li>Review pass/fail reasons shown in the UI.</li>
+                    <li>Resolve issues or select employees who are ready to continue.</li>
+                  </ul>
+                </div>
+                <div class="content-block">
+                  <span class="mini-tag red">Exception path</span>
+                  <h4>Keep unresolved rows visible</h4>
+                  <p>Employees with unresolved validation issues remain on the watchlist.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="journey-item" id="step-4" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">4</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Direct Deposit configuration</p><span class="phase-chip portal">Customer Journey on Portal</span></div>
+                <h3>Choose whether and when Direct Deposit should switch</h3>
+                <p class="journey-summary">Only Tenant Admins and Company Admins can configure the Direct Deposit instruction for the selected employees.</p>
+              </div>
+              <span class="outcome-badge">Output: Direct Deposit instruction</span>
+            </header>
+            <div class="journey-body">
+              <div class="choice-grid">
+                <article class="choice-card"><span class="choice-letter">A</span><span class="mini-tag">Default</span><h4>No</h4><p>Do not switch Direct Deposit during onboarding.</p></article>
+                <article class="choice-card"><span class="choice-letter">B</span><span class="mini-tag blue">Immediate</span><h4>Yes</h4><p>Switch Direct Deposit immediately at onboarding.</p></article>
+                <article class="choice-card"><span class="choice-letter">C</span><span class="mini-tag green">Scheduled</span><h4>Deferred</h4><p>Switch on the assigned date or the next pay cycle after that date.</p></article>
+              </div>
+              <details class="technical">
+                <summary>Employment verification still controls execution</summary>
+                <div class="technical-content">
+                  <p>The selected option is applied later in Step 6 only when employment is verified. Employees marked Pre-hire do not switch Direct Deposit.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </article>
+
+        <article class="journey-item" id="step-5" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">5</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Summary &amp; submission</p><span class="phase-chip portal">Customer Journey on Portal</span></div>
+                <h3>Sign off the final list and start processing</h3>
+                <p class="journey-summary">The approved employee set is exported for confirmation before the batch enters automated account creation and processing.</p>
+              </div>
+              <span class="outcome-badge">Output: Submitted batch</span>
+            </header>
+            <div class="journey-body">
+              <div class="content-grid">
+                <div class="content-block">
+                  <span class="mini-tag">Sign-off artifact</span>
+                  <h4>Download the final .xlsx</h4>
+                  <p>The final employee list is available as a downloadable spreadsheet for review and sign-off.</p>
+                </div>
+                <div class="content-block">
+                  <span class="mini-tag blue">Transition</span>
+                  <h4>Submit to begin processing</h4>
+                  <p>Submission moves the approved batch into the account-creation workflow.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="journey-item" id="step-6" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">6</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Account creation &amp; processing</p><span class="phase-chip backend">Backend Process</span></div>
+                <h3>Run identity, employment, card, status, and communication workflows</h3>
+                <p class="journey-summary">The submitted batch passes through record creation, KYC, employment verification, Corecard provisioning, Direct Deposit gating, event logging, and notifications.</p>
+              </div>
+              <span class="outcome-badge">Output: ONBOARDED user</span>
+            </header>
+            <div class="journey-body">
+              <div class="process-flow" aria-label="Step 6 automated sequence">
+                <article class="process-node"><span class="process-index">Start</span><h4>Log submission</h4><p>Log one event, then create User and Employer records used by Better Auth.</p></article>
+                <article class="process-node"><span class="process-index">Identity</span><h4>Run KYC</h4><p>Persona and Sentilink perform identity and risk checks.</p></article>
+                <article class="process-node"><span class="process-index">Employment</span><h4>Verify employment</h4><p>Prism/Asure returns verified or Pre-hire status.</p></article>
+                <article class="process-node"><span class="process-index">Card</span><h4>Provision account</h4><p>Corecard links an onsite card or requests a personalized card.</p></article>
+                <article class="process-node"><span class="process-index">Finalize</span><h4>Onboard and notify</h4><p>Mark ONBOARDED, log the employee event, store failures, and communicate.</p></article>
+              </div>
+
+              <div class="decision-lanes">
+                <section class="decision-lane">
+                  <span class="mini-tag blue">Decision 1</span>
+                  <h4>Employment status controls Direct Deposit</h4>
+                  <p>The verification result determines whether the configured Direct Deposit instruction is executed.</p>
+                  <div class="decision-question">Employment verified?</div>
+                  <div class="branch-grid">
+                    <div class="branch yes"><strong>Yes</strong>Apply No, immediate, or deferred Direct Deposit behavior.</div>
+                    <div class="branch no"><strong>No</strong>Mark Pre-hire in Employer table; do not switch Direct Deposit.</div>
+                  </div>
+                </section>
+                <section class="decision-lane">
+                  <span class="mini-tag amber">Decision 2</span>
+                  <h4>Card data determines the provisioning path</h4>
+                  <p>The submitted fields determine whether Corecard links an existing onsite card or creates a personalized one.</p>
+                  <div class="decision-question">Proxy + Card Last 4 present?</div>
+                  <div class="branch-grid">
+                    <div class="branch yes"><strong>Yes: Onsite</strong>Update card and PII, store KIT ID in User table, and send to Corecard.</div>
+                    <div class="branch no"><strong>No</strong>Request a personalized card and send Office/Home delivery instructions.</div>
+                  </div>
+                </section>
+              </div>
+
+              <div class="finalization-grid" aria-label="Step 6 finalization actions">
+                <div class="final-chip"><span>1</span>Mark user ONBOARDED</div>
+                <div class="final-chip"><span>2</span>Log employee event</div>
+                <div class="final-chip"><span>3</span>Store failures in DB</div>
+                <div class="final-chip"><span>4</span>Send onboarding email</div>
+                <div class="final-chip"><span>5</span>Send invitation email</div>
+                <div class="final-chip"><span>6</span>Send SMS if email is missing</div>
+              </div>
+
+              <details class="technical">
+                <summary>View the complete 12-step processing sequence</summary>
+                <div class="technical-content">
+                  <ol>
+                    <li>Log an event per submission.</li>
+                    <li>Create User and Employer records used by Better Auth.</li>
+                    <li>Run KYC via Persona and Sentilink.</li>
+                    <li>Verify employment via Prism/Asure; on failure, mark the employee Pre-hire in the Employer table.</li>
+                    <li>Create the Corecard account using the onsite or personalized-card path.</li>
+                    <li>Send Office/Home delivery instructions to Corecard.</li>
+                    <li>Mark the user ONBOARDED in the database.</li>
+                    <li>Apply the selected Direct Deposit option only for verified employment; do not switch for Pre-hire.</li>
+                    <li>Log an individual event per employee.</li>
+                    <li>Store failures in the database for a future Employer dashboard view.</li>
+                    <li>Send onboarding and invitation emails.</li>
+                    <li>Send SMS when email is missing.</li>
+                  </ol>
+                </div>
+              </details>
+
+              <div class="integration-band" aria-label="Technical integrations involved in the flow">
+                <span class="integration-title">Technical integrations</span>
+                <span class="integration-pill">Better Auth</span>
+                <span class="integration-pill">Persona</span>
+                <span class="integration-pill">Sentilink</span>
+                <span class="integration-pill">Prism / Asure</span>
+                <span class="integration-pill">Corecard</span>
+                <span class="integration-pill">USPS tracking</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="journey-item" id="step-7" data-section="journey">
+          <div class="journey-marker" aria-hidden="true">7</div>
+          <div class="journey-card">
+            <header class="journey-header">
+              <div>
+                <div class="journey-label-row"><p class="journey-kicker">Card delivery &amp; tracking</p><span class="phase-chip backend">Backend Process</span></div>
+                <h3>Retain fulfillment data after onboarding</h3>
+                <p class="journey-summary">The workflow moves from account onboarding into onsite-card coordination, delivery-data storage, and shipment tracking.</p>
+              </div>
+              <span class="outcome-badge">Output: Trackable delivery</span>
+            </header>
+            <div class="journey-body">
+              <div class="content-grid">
+                <div class="content-block">
+                  <span class="mini-tag">Current operation</span>
+                  <h4>Coordinate onsite card requests</h4>
+                  <p>Onsite Card requests are coordinated by Ajiitesh and maintained on a Google Doc.</p>
+                </div>
+                <div class="content-block">
+                  <span class="mini-tag green">Tracking records</span>
+                  <h4>Store delivery and shipment data</h4>
+                  <ul>
+                    <li>The User table stores delivery data.</li>
+                    <li>The USPS tracker table stores shipment tracking.</li>
+                  </ul>
+                </div>
+                <div class="content-block full">
+                  <span class="mini-tag amber">Persistent table</span>
+                  <h4>Recently Onboarded shows all onboarding types</h4>
+                  <p>The current table persists over time. Its deprecation is listed as an Iteration 2 item.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap" aria-labelledby="roadmap-title">
+      <div class="section-head">
+        <p class="eyebrow">Iteration 2</p>
+        <h2 id="roadmap-title">The next development priorities</h2>
+        <p>These five improvements are explicitly identified in the technical flow as the next iteration.</p>
+      </div>
+
+      <div class="roadmap-grid">
+        <article class="roadmap-card"><span class="roadmap-index">01</span><h3>Block ages 0-15</h3><p>Add a rules-engine control that prevents employees in this age range from onboarding.</p></article>
+        <article class="roadmap-card"><span class="roadmap-index">02</span><h3>Consent for ages 16-18</h3><p>Provide a downloadable parent consent form that the employer can distribute offline.</p></article>
+        <article class="roadmap-card"><span class="roadmap-index">03</span><h3>Deprecate the recent table</h3><p>Remove the Recently Onboarded Users table, which currently persists across onboarding types.</p></article>
+        <article class="roadmap-card"><span class="roadmap-index">04</span><h3>Find users stuck before EWA</h3><p>Identify ONBOARDED users who remain in the flow and have not enrolled for Earned Wage Access.</p></article>
+        <article class="roadmap-card"><span class="roadmap-index">05</span><h3>Move onsite requests into the portal</h3><p>Create an Onsite Card Request form in the Admin Portal and move the current operational data into the database.</p></article>
+      </div>
+
+      <div class="source-note" role="note">
+        <span aria-hidden="true">i</span>
+        <p><strong>Source terminology retained:</strong> the current card-delivery section refers to a Google Doc, while the Iteration 2 item refers to moving data from an Excel sheet into the database. This page does not silently reconcile those two descriptions.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Grit Financial</div>
+        <div class="footer-copy">Internal use only &middot; Bulk Enrollment Technical Journey</div>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Portfolio home</a>
+        <a href="#overview">Timeline overview</a>
+        <a href="index.html#featured-projects">Selected work</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const printButtons = document.querySelectorAll('[data-print]');
+      printButtons.forEach((button) => button.addEventListener('click', () => window.print()));
+
+      const details = [...document.querySelectorAll('details.technical')];
+      const expandButton = document.querySelector('[data-expand-all]');
+      if (expandButton) {
+        expandButton.addEventListener('click', () => {
+          const shouldOpen = !details.every((item) => item.open);
+          details.forEach((item) => { item.open = shouldOpen; });
+          expandButton.setAttribute('aria-pressed', String(shouldOpen));
+          expandButton.textContent = shouldOpen ? 'Collapse technical details' : 'Expand technical details';
+        });
+      }
+
+      const links = [...document.querySelectorAll('[data-nav]')];
+      const sections = links
+        .map((link) => document.getElementById(link.getAttribute('href').slice(1)))
+        .filter(Boolean);
+
+      if ('IntersectionObserver' in window && sections.length) {
+        const observer = new IntersectionObserver((entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (!visible) return;
+          links.forEach((link) => {
+            const active = link.getAttribute('href') === '#' + visible.target.id;
+            link.classList.toggle('active', active);
+            if (active) link.setAttribute('aria-current', 'true');
+            else link.removeAttribute('aria-current');
+          });
+        }, { rootMargin: '-35% 0px -55% 0px', threshold: [0, .1, .5] });
+        sections.forEach((section) => observer.observe(section));
+      }
+    })();
+  </script>
+</body>
+</html>
