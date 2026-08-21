@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Grit Financial Complaint Classification Report with regulatory classification, root-cause analysis, confidence scoring, and human-review controls."
+  >
+  <meta name="theme-color" content="#111111">
+  <title>Complaint Classification Report | Grit Financial</title>
+  <link rel="icon" type="image/png" href="assets/Grit_FavIcon.png">
+  <style>
+    :root {
+      --black: #111111;
+      --white: #ffffff;
+      --magenta: #ff36d7;
+      --blue: #3395ff;
+      --line: rgba(255, 255, 255, 0.16);
+      --bar-height: 68px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #f4f6f9;
+      color: var(--white);
+      font-family: Inter, "Source Sans 3", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .report-shell {
+      display: grid;
+      grid-template-rows: var(--bar-height) minmax(0, 1fr);
+      width: 100%;
+      height: 100dvh;
+      min-height: 100%;
+    }
+
+    .report-bar {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 10px clamp(16px, 3vw, 36px);
+      background: var(--black);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 10px 30px rgba(17, 17, 17, 0.2);
+    }
+
+    .report-brand {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .report-brand img {
+      width: 112px;
+      height: auto;
+      flex: 0 0 auto;
+    }
+
+    .report-title {
+      min-width: 0;
+      padding-left: 18px;
+      border-left: 1px solid var(--line);
+    }
+
+    .report-title strong,
+    .report-title span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .report-title strong {
+      font-size: 0.95rem;
+      line-height: 1.15;
+    }
+
+    .report-title span {
+      margin-top: 3px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .report-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .report-actions a {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 15px;
+      color: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .report-actions a:hover,
+    .report-actions a:focus-visible {
+      border-color: var(--magenta);
+      background: rgba(255, 54, 215, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .report-actions .primary {
+      color: var(--black);
+      border-color: transparent;
+      background: linear-gradient(110deg, var(--magenta), var(--blue));
+    }
+
+    .report-actions .primary:hover,
+    .report-actions .primary:focus-visible {
+      border-color: transparent;
+      background: linear-gradient(110deg, var(--magenta), var(--blue));
+    }
+
+    .frame-wrap {
+      position: relative;
+      min-height: 0;
+      background: #f4f6f9;
+    }
+
+    .report-frame {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #ffffff;
+    }
+
+    .loading-state {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      color: #343844;
+      text-align: center;
+    }
+
+    .loading-card {
+      width: min(460px, 100%);
+      padding: 28px;
+      background: #ffffff;
+      border: 1px solid #dfe5ee;
+      border-radius: 18px;
+      box-shadow: 0 22px 65px rgba(17, 17, 17, 0.1);
+    }
+
+    .loading-card::before {
+      content: "";
+      display: block;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 18px;
+      border: 5px solid #e9edf3;
+      border-top-color: var(--magenta);
+      border-right-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 850ms linear infinite;
+    }
+
+    .loading-card strong {
+      display: block;
+      color: var(--black);
+      font-size: 1.05rem;
+    }
+
+    .loading-card p {
+      margin: 9px 0 0;
+      color: #667085;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 720px) {
+      :root { --bar-height: 62px; }
+
+      .report-bar {
+        gap: 12px;
+        padding-inline: 12px;
+      }
+
+      .report-brand img {
+        width: 88px;
+      }
+
+      .report-title {
+        display: none;
+      }
+
+      .report-actions a {
+        min-height: 38px;
+        padding-inline: 12px;
+        font-size: 0.76rem;
+      }
+
+      .report-actions .open-label {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="report-shell">
+    <header class="report-bar">
+      <div class="report-brand">
+        <img src="assets/Grit_Logo_RGB.png" alt="Grit Financial">
+        <div class="report-title">
+          <strong>Complaint Classification Report</strong>
+          <span>Interactive compliance analysis</span>
+        </div>
+      </div>
+
+      <nav class="report-actions" aria-label="Report navigation">
+        <a href="index.html">← Back to portfolio</a>
+        <a
+          class="primary"
+          href="https://grit-financial.github.io/neil_strategy/projects/complaint-classification.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="open-label">Open full report</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="frame-wrap">
+      <div class="loading-state" aria-hidden="true">
+        <div class="loading-card">
+          <strong>Loading the Complaint Classification Report</strong>
+          <p>The canonical Grit report is being loaded so its current information and interactive controls remain unchanged.</p>
+        </div>
+      </div>
+
+      <iframe
+        class="report-frame"
+        title="Grit Financial Complaint Classification Report"
+        src="https://grit-financial.github.io/neil_strategy/projects/complaint-classification.html"
+        loading="eager"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="clipboard-read; clipboard-write"
+      >
+        <p>
+          The interactive report could not be embedded.
+          <a href="https://grit-financial.github.io/neil_strategy/projects/complaint-classification.html">
+            Open the Complaint Classification Report.
+          </a>
+        </p>
+      </iframe>
+    </main>
+  </div>
+
+  <noscript>
+    <p>
+      JavaScript is not required for this page. If the report does not appear,
+      <a href="https://grit-financial.github.io/neil_strategy/projects/complaint-classification.html">
+        open the full report directly.
+      </a>
+    </p>
+  </noscript>
+</body>
+</html>
