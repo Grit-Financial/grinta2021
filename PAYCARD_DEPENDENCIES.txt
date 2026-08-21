@@ -1,0 +1,19 @@
+The paycard-landing-page.html project depends on the existing root files:
+  styles.css
+  script.js
+  config.js
+
+It also depends on the existing paycard media in assets/:
+  abcorp-grit-paycard-flyer.pdf
+  abcorp-logo.png
+  abcorp-paycard-preview.webp
+  app-moneygram-phone.png
+  cfsb-logo.png
+  favicon.png
+  grit-logo.png
+  moneygram-logo.png
+  pci-logo.png
+  soc-logo.png
+  visa-logo.png
+
+Upload this package as an overlay to the existing grinta2021 repository. Do not delete those files before uploading.

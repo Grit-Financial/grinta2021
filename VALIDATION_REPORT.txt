@@ -1,0 +1,27 @@
+Validation completed before packaging
+
+PASS - index contains exactly 4 project cards: 4
+PASS - project card targets are correct and ordered: ['paycard-landing-page.html', 'bulk-enrollment.html', 'complaint-classification.html', 'instant-wage-transfer.html']
+PASS - all project card targets exist
+PASS - removed portfolio references are absent from index
+PASS - index has no duplicate IDs
+PASS - index title identifies project directory
+PASS - paycard page preserved as standalone root project
+PASS - paycard brand returns to project directory
+PASS - paycard still references existing styles.css
+PASS - paycard still references existing script.js
+PASS - paycard still references existing config.js
+PASS - bulk enrollment returns to index
+PASS - complaint report returns to index
+PASS - instant transfer returns to index
+PASS - bulk source flow included
+PASS - index.html has no missing local href/src targets
+PASS - bulk-enrollment.html has no missing local href/src targets
+PASS - complaint-classification.html has no missing local href/src targets
+PASS - instant-wage-transfer.html has no missing local href/src targets
+PASS - paycard overlay dependencies match the documented current-repository files: ['assets/abcorp-grit-paycard-flyer.pdf', 'assets/abcorp-logo.png', 'assets/app-moneygram-phone.png', 'assets/cfsb-logo.png', 'assets/favicon.png', 'assets/grit-logo.png', 'assets/moneygram-logo.png', 'assets/pci-logo.png', 'assets/soc-logo.png', 'assets/visa-logo.png', 'config.js', 'script.js', 'styles.css']
+PASS - directory CSS braces are balanced: 337 open / 337 close
+PASS - index.html inline JavaScript parses
+PASS - bulk-enrollment.html inline JavaScript parses
+PASS - instant-wage-transfer.html inline JavaScript parses
+PASS - complaint-classification.html inline JavaScript parses
