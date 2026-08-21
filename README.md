@@ -1,26 +1,40 @@
-# Grit Financial Portfolio
+# AB Corp + Grit Paycard employee landing page
 
-Static GitHub Pages package containing:
+A responsive, bilingual, one-page website for AB Corp employees who currently receive paper paychecks. It explains the Grit Visa Paycard, builds trust in the AB Corp + Grit partnership, introduces eligible MoneyGram transfers, answers common KYC questions and captures employee interest for HR follow-up.
 
-- `index.html` — portfolio landing page with Bulk Enrollment as the hero project
-- `bulk-enrollment.html` — Bulk Enrollment technical journey
-- `complaint-classification.html` — portfolio project page that displays the canonical Complaint Classification Report and preserves its current interactive controls
-- `instant-wage-transfer.html` — Instant Wage Transfer executive usability study
-- `style.css` and `assets/` — shared landing-page styling and Grit brand assets
+## Package contents
 
-The landing page intentionally contains no Project Archive, About the Work, or Start a Conversation sections.
+- `index.html` - page structure and content
+- `styles.css` - responsive design and print-safe styling
+- `script.js` - English/Vietnamese translation, FAQ accordion, validation and form submission
+- `config.js` - Google Apps Script endpoint configuration
+- `assets/` - AB Corp and Grit logos, Grit website partner assets, MoneyGram/app imagery and the employee flyer
+- `google-apps-script/Code.gs` - Google Sheet endpoint
+- `google-apps-script/SETUP.md` - step-by-step Google Sheet setup
+- `CONTENT-SOURCES.md` - content and compliance notes
 
-## Complaint Classification source
+## Launch on GitHub Pages
 
-The Complaint Classification project page displays the current canonical report from:
+1. Complete the Google Sheet setup in `google-apps-script/SETUP.md`.
+2. Paste the deployed Apps Script `/exec` URL into `config.js`.
+3. Upload all files and folders to the root of a GitHub repository.
+4. In GitHub, open **Settings > Pages**.
+5. Set the source to **Deploy from a branch**, select the branch (usually `main`) and the root folder.
+6. Save and wait for GitHub Pages to publish the site.
 
-`https://grit-financial.github.io/neil_strategy/projects/complaint-classification.html`
+The page does not use a build system or external JavaScript library. All required front-end assets are included locally.
 
-An **Open full report** link is included as a fallback when a browser or network policy prevents embedding.
+## Before production launch
 
-## Publish on GitHub Pages
+- Confirm the exact AB Corp HR workflow, ownership and response time.
+- Confirm whether an Employee ID should remain optional.
+- Have Grit compliance review all card, fee, FDIC, MoneyGram and identity-verification language.
+- Confirm the Vietnamese translation with a native Vietnamese reviewer.
+- Test the page with employees on mobile devices and at the QR-code destination printed on the flyer.
+- Add the final landing-page URL or QR code to future flyer versions.
 
-1. Upload every file and folder in this package to the root of the repository.
-2. In GitHub, open **Settings → Pages**.
-3. Select **Deploy from a branch**, choose the publishing branch, and use the repository root.
-4. Keep the relative paths and filenames unchanged so the project links continue to work.
+## Form behavior
+
+Until a valid Apps Script URL is added to `config.js`, the form displays a setup notice and does not claim that a request was submitted.
+
+The form intentionally does not collect financial account details, Social Security numbers or identity documents. Those belong only in Grit's secure enrollment process.
