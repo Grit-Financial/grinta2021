@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Executive product requirements for Fortuna Payouts, a prefunded employer-to-employee supplemental compensation capability powered by Grit.">
+  <meta name="theme-color" content="#111111">
+  <title>Fortuna Payouts PRD | Grit Financial</title>
+
+  <link rel="icon" type="image/png" href="assets/Grit_FavIcon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Work+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root{
+      --payout-green:#28cd41;
+      --payout-orange:#ff9500;
+      --payout-red:#ff453a;
+    }
+
+    .prd-hero{
+      position:relative;
+      overflow:hidden;
+      padding-top:5.75rem;
+      color:var(--color-white);
+      background:var(--color-black);
+      isolation:isolate;
+    }
+    .prd-hero::before{
+      content:"";
+      position:absolute;inset:0;z-index:-2;
+      opacity:.24;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+      background-size:4rem 4rem;
+      mask-image:linear-gradient(to right,black 0%,transparent 88%);
+    }
+    .prd-hero::after{
+      content:"";position:absolute;width:42rem;height:42rem;right:-16rem;top:4rem;z-index:-1;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(255,54,215,.20),rgba(51,149,255,.08) 45%,transparent 70%);
+      filter:blur(2px);
+    }
+    .prd-hero__inner{
+      min-height:680px;
+      display:grid;
+      grid-template-columns:minmax(0,1.15fr) minmax(22rem,.68fr);
+      align-items:center;
+      gap:5rem;
+      padding-block:clamp(5rem,9vw,8rem);
+    }
+    .prd-hero h1{max-width:9ch;color:#fff}
+    .prd-hero__summary{
+      max-width:43rem;margin-top:1.6rem;color:rgba(255,255,255,.72);
+      font-size:clamp(1.08rem,1.5vw,1.3rem);line-height:1.65;
+    }
+    .prd-hero__actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.1rem}
+    .prd-panel{
+      padding:1.6rem;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.07);
+      border-radius:var(--radius-large);
+      box-shadow:0 35px 90px rgba(0,0,0,.3);
+      backdrop-filter:blur(14px);
+    }
+    .prd-panel__label{
+      color:var(--color-magenta);font-family:var(--font-display);font-size:.72rem;
+      font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+    }
+    .prd-panel h2{max-width:none;margin-top:.55rem;color:#fff;font-size:1.8rem}
+    .snapshot-mini{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.35rem}
+    .snapshot-mini div{padding:1rem;border-radius:1rem;background:rgba(255,255,255,.07)}
+    .snapshot-mini strong{display:block;color:#fff;font:700 1.3rem var(--font-display)}
+    .snapshot-mini span{display:block;margin-top:.25rem;color:rgba(255,255,255,.58);font-size:.78rem}
+    .hero-rule{
+      margin-top:1rem;padding:1rem;border-radius:1rem;
+      color:#111;background:linear-gradient(100deg,var(--color-magenta),#f47be5);
+      font-weight:700;
+    }
+
+    .anchor-nav{
+      position:sticky;top:5.75rem;z-index:80;background:rgba(255,255,255,.96);
+      border-bottom:1px solid var(--color-line);backdrop-filter:blur(14px);
+    }
+    .anchor-nav__inner{
+      display:flex;gap:.35rem;overflow:auto;padding:.7rem 0;scrollbar-width:none;
+    }
+    .anchor-nav__inner::-webkit-scrollbar{display:none}
+    .anchor-nav a{
+      white-space:nowrap;padding:.55rem .8rem;border-radius:999px;text-decoration:none;
+      color:var(--color-muted);font-family:var(--font-display);font-size:.78rem;font-weight:700;
+    }
+    .anchor-nav a:hover{color:var(--color-black);background:var(--color-soft)}
+
+    .prd-section{padding-block:clamp(4.5rem,7.5vw,7rem)}
+    .prd-section--soft{background:var(--color-soft)}
+    .prd-section--dark{color:#fff;background:#111}
+    .prd-section--dark h2,.prd-section--dark h3{color:#fff}
+    .prd-section--dark .eyebrow{color:var(--color-magenta)}
+    .section-intro{
+      display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,.52fr);
+      align-items:end;gap:3rem;margin-bottom:3rem;
+    }
+    .section-intro h2{max-width:16ch}
+    .section-intro>p{font-size:1.08rem;color:var(--color-text)}
+    .prd-section--dark .section-intro>p{color:rgba(255,255,255,.66)}
+
+    .exec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+    .exec-card{
+      min-height:158px;padding:1.4rem;border:1px solid var(--color-line);border-radius:var(--radius-medium);
+      background:#fff;
+    }
+    .exec-card__label{
+      color:var(--color-muted);font-family:var(--font-display);font-size:.71rem;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;
+    }
+    .exec-card strong{display:block;margin-top:.65rem;color:var(--color-ink);font:700 1.45rem/1.15 var(--font-display)}
+    .exec-card p{margin-top:.55rem;font-size:.92rem;color:var(--color-text)}
+
+    .flow{
+      display:grid;grid-template-columns:repeat(7,1fr);gap:.55rem;margin-top:2.5rem;
+    }
+    .flow-step{
+      position:relative;min-height:132px;padding:1rem;border:1px solid var(--color-line);
+      border-radius:1rem;background:#fff;
+    }
+    .flow-step::after{
+      content:"→";position:absolute;right:-.55rem;top:50%;z-index:2;transform:translateY(-50%);
+      color:var(--color-magenta);font:800 1rem var(--font-display);
+    }
+    .flow-step:last-child::after{display:none}
+    .flow-step span{color:var(--color-magenta);font:800 .7rem var(--font-display);letter-spacing:.08em}
+    .flow-step strong{display:block;margin-top:.35rem;color:var(--color-ink);font-family:var(--font-display)}
+    .flow-step p{margin-top:.35rem;font-size:.83rem;color:var(--color-muted)}
+
+    .rule-band{
+      display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1fr);gap:2rem;align-items:center;
+      margin-top:2.5rem;padding:2rem;border-radius:var(--radius-large);background:#111;color:#fff;
+    }
+    .rule-number{font:800 clamp(3rem,7vw,6rem)/1 var(--font-display);color:var(--color-magenta)}
+    .rule-copy h3{color:#fff;font-size:1.8rem}
+    .rule-copy p{margin-top:.65rem;color:rgba(255,255,255,.7)}
+
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;margin-top:2rem}
+    .compare-card{padding:1.6rem;border-radius:var(--radius-medium);border:1px solid var(--color-line);background:#fff}
+    .compare-card h3{font-size:1.45rem}
+    .compare-card ul{padding-left:1.15rem;margin-bottom:0}
+    .compare-card li{margin:.5rem 0}
+    .compare-card--yes{border-top:5px solid var(--payout-green)}
+    .compare-card--no{border-top:5px solid var(--payout-red)}
+
+    .callout{
+      margin-top:1.5rem;padding:1.35rem 1.5rem;border-left:5px solid var(--color-magenta);
+      border-radius:0 var(--radius-small) var(--radius-small) 0;background:#fff4fd;
+    }
+    .callout strong{color:var(--color-ink)}
+    .callout--blue{border-left-color:var(--color-blue);background:var(--color-soft-blue)}
+    .callout--warning{border-left-color:var(--payout-orange);background:#fff8ed}
+
+    .data-table{width:100%;border-collapse:collapse;margin-top:2rem;background:#fff;border-radius:1rem;overflow:hidden;box-shadow:var(--shadow-small)}
+    .data-table th,.data-table td{padding:1rem;border-bottom:1px solid var(--color-line);text-align:left;vertical-align:top}
+    .data-table th{color:#fff;background:#111;font:700 .8rem var(--font-display);letter-spacing:.04em}
+    .data-table tr:last-child td{border-bottom:0}
+    .data-table td:first-child{font-family:var(--font-display);font-weight:700;color:var(--color-ink)}
+
+    .responsibility-table td:nth-child(2){background:#fff8fd}
+    .responsibility-table td:nth-child(3){background:#f7fbff}
+    .responsibility-table td:nth-child(4){background:#f7f7f8}
+
+    .scope-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:2rem}
+    .scope-card{padding:1.6rem;border-radius:var(--radius-medium);background:#fff;border:1px solid var(--color-line)}
+    .scope-card h3{font-size:1.5rem}
+    .scope-card ul{columns:2;column-gap:2rem;padding-left:1.1rem}
+    .scope-card li{margin:.45rem 0;break-inside:avoid}
+    .scope-card--in{border-top:5px solid var(--payout-green)}
+    .scope-card--out{border-top:5px solid var(--payout-red)}
+
+    .principles{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:2rem}
+    .principle{padding:1.3rem;border-top:3px solid var(--color-magenta);background:#fff;border-radius:0 0 1rem 1rem;box-shadow:var(--shadow-small)}
+    .principle span{color:var(--color-muted);font:700 .7rem var(--font-display);letter-spacing:.1em}
+    .principle strong{display:block;margin-top:.5rem;color:var(--color-ink);font-family:var(--font-display)}
+    .principle p{margin-top:.5rem;font-size:.88rem}
+
+    .takeaway{
+      padding:clamp(4rem,7vw,7rem) 0;background:#111;color:#fff;
+    }
+    .takeaway h2{max-width:17ch;color:#fff}
+    .takeaway .gradient-text{font-size:inherit}
+    .takeaway-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.4rem}
+    .takeaway-card{padding:1.5rem;border:1px solid rgba(255,255,255,.15);border-radius:1rem;background:rgba(255,255,255,.05)}
+    .takeaway-card strong{display:block;color:var(--color-magenta);font-family:var(--font-display);font-size:1.1rem}
+    .takeaway-card p{margin-top:.5rem;color:rgba(255,255,255,.68)}
+
+    @media(max-width:980px){
+      .prd-hero__inner,.section-intro,.rule-band{grid-template-columns:1fr}
+      .prd-panel{max-width:650px}
+      .exec-grid{grid-template-columns:repeat(2,1fr)}
+      .flow{grid-template-columns:repeat(2,1fr)}
+      .flow-step::after{display:none}
+      .principles{grid-template-columns:repeat(2,1fr)}
+      .scope-card ul{columns:1}
+    }
+    @media(max-width:700px){
+      .prd-hero__inner{min-height:auto;gap:2rem}
+      .exec-grid,.compare-grid,.scope-grid,.takeaway-grid,.principles{grid-template-columns:1fr}
+      .flow{grid-template-columns:1fr}
+      .snapshot-mini{grid-template-columns:1fr 1fr}
+      .data-table{display:block;overflow:auto}
+      .anchor-nav{top:5rem}
+    }
+    @media print{
+      .site-header,.anchor-nav,.hero-actions,.site-footer{display:none!important}
+      .prd-hero{padding-top:0}
+      .prd-hero__inner{min-height:auto;padding-block:2rem}
+      .prd-section{padding-block:2rem}
+      .exec-card,.compare-card,.scope-card,.principle,.data-table{box-shadow:none}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Back to Grit Financial project directory">
+        <img class="brand-logo" src="assets/Grit_Logo_RGB.png" width="174" height="72" alt="Grit Financial">
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation" data-nav>
+        <a href="index.html">All projects</a>
+        <a href="#snapshot">Snapshot</a>
+        <a href="#journey">Journey</a>
+        <a href="#rules">Rules</a>
+        <a href="#scope">Scope</a>
+        <button class="button button--dark button--small" type="button" onclick="window.print()">Print / PDF</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="prd-hero" id="top">
+      <div class="container prd-hero__inner">
+        <div>
+          <p class="eyebrow eyebrow--light">Grit Financial · Product requirements</p>
+          <h1>Fortuna <span class="gradient-text">Payouts.</span></h1>
+          <p class="prd-hero__summary">A controlled, prefunded way for Employers to distribute supplemental compensation directly to eligible employees' All-In-One Accounts and Paycards.</p>
+          <div class="prd-hero__actions">
+            <a class="button button--accent" href="#snapshot">Read executive snapshot ↓</a>
+            <a class="text-link text-link--light" href="#scope">View V1 scope <span>↘</span></a>
+          </div>
+        </div>
+        <aside class="prd-panel">
+          <span class="prd-panel__label">V1 · Current scope</span>
+          <h2>Built for direct Fortuna → Employer relationships.</h2>
+          <div class="snapshot-mini">
+            <div><strong>ACH / Wire</strong><span>Employer funding</span></div>
+            <div><strong>Instant ACH</strong><span>Employee distribution</span></div>
+            <div><strong>&gt; $1,000</strong><span>Required remaining balance</span></div>
+            <div><strong>$100K</strong><span>Standard max funding balance</span></div>
+          </div>
+          <div class="hero-rule">One-way by design: Employer → Employee.</div>
+        </aside>
+      </div>
+    </section>
+
+    <nav class="anchor-nav" aria-label="PRD sections">
+      <div class="container anchor-nav__inner">
+        <a href="#snapshot">Executive snapshot</a>
+        <a href="#problem">Problem</a>
+        <a href="#model">Operating model</a>
+        <a href="#journey">Journey</a>
+        <a href="#rules">Business rules</a>
+        <a href="#validation">Validation</a>
+        <a href="#finality">Finality</a>
+        <a href="#exceptions">Exceptions</a>
+        <a href="#responsibility">Responsibilities</a>
+        <a href="#scope">V1 scope</a>
+        <a href="#metrics">Metrics</a>
+      </div>
+    </nav>
+
+    <section class="prd-section" id="snapshot">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Executive snapshot</p><h2>The product in one minute.</h2></div>
+          <p>Payouts is a supplemental compensation distribution capability—not a payroll engine and not a payment-recovery product.</p>
+        </div>
+        <div class="exec-grid">
+          <article class="exec-card"><span class="exec-card__label">Commercial model</span><strong>Fortuna contracts directly with Employer</strong><p>MSA governs the relationship; Payouts Agreement governs product-specific obligations.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Payment type</span><strong>Net compensation only</strong><p>Tips, bonuses, commissions, incentives, approved reimbursements and off-cycle payments.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Funding</span><strong>ACH / Wire</strong><p>Employers prefund before Payouts can be distributed.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Distribution</span><strong>Instant ACH</strong><p>To eligible All-In-One Accounts or Paycards; timing is not guaranteed.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Reserve floor</span><strong>Balance must remain &gt; $1,000</strong><p>If projected balance is $1,000 or less, the batch is paused.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Maximum balance</span><strong>$100,000 standard</strong><p>Unless otherwise approved or changed for banking, regulatory, compliance, or risk requirements.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Accuracy</span><strong>Employer responsibility</strong><p>The platform cannot determine whether the compensation amount itself is correct.</p></article>
+          <article class="exec-card"><span class="exec-card__label">Finality</span><strong>No reversal in V1</strong><p>Submitted Payouts are one-way and do not include recovery or correction tooling.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="prd-section prd-section--soft" id="problem">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Product problem</p><h2>Supplemental pay needs a controlled distribution path.</h2></div>
+          <p>Employers need a simple way to move compensation outside their normal payroll cycle without making Fortuna responsible for compensation calculations or tax treatment.</p>
+        </div>
+        <div class="exec-grid">
+          <article class="exec-card"><span class="exec-card__label">Use case</span><strong>Tips</strong></article>
+          <article class="exec-card"><span class="exec-card__label">Use case</span><strong>Bonuses</strong></article>
+          <article class="exec-card"><span class="exec-card__label">Use case</span><strong>Commissions & incentives</strong></article>
+          <article class="exec-card"><span class="exec-card__label">Use case</span><strong>Approved reimbursements & off-cycle pay</strong></article>
+        </div>
+        <div class="callout"><strong>Product boundary:</strong> Payouts provides controlled payment distribution. Employer remains responsible for payroll, tax, employee eligibility, payment authorization, recipient selection, and payment accuracy.</div>
+      </div>
+    </section>
+
+    <section class="prd-section prd-section--dark" id="model">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Operating model</p><h2>Three parties. Three clear responsibilities.</h2></div>
+          <p>The V1 model intentionally separates compensation decisions, program administration, and technology execution.</p>
+        </div>
+        <div class="takeaway-grid">
+          <article class="takeaway-card"><strong>Employer</strong><p>Determines who is paid and how much. Owns payroll, taxes, eligibility, authorization, and business accuracy.</p></article>
+          <article class="takeaway-card"><strong>Fortuna</strong><p>Owns the Employer relationship, onboarding, program administration, funding coordination, and operational support.</p></article>
+          <article class="takeaway-card"><strong>Grit</strong><p>Provides the underlying technology and executes valid Payment Instructions within the agreed product scope.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="prd-section" id="journey">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">End-to-end journey</p><h2>From prefunding to employee receipt.</h2></div>
+          <p>The bulk workflow lets the Employer prepare Net Payment Amounts offline while retaining in-product validation and final authorization.</p>
+        </div>
+        <div class="flow">
+          <div class="flow-step"><span>01</span><strong>Fund</strong><p>Employer funds Fortuna via ACH or Wire.</p></div>
+          <div class="flow-step"><span>02</span><strong>Select</strong><p>Choose eligible employees.</p></div>
+          <div class="flow-step"><span>03</span><strong>Prepare</strong><p>Download XLSX and enter net amounts offline.</p></div>
+          <div class="flow-step"><span>04</span><strong>Upload</strong><p>Return completed template to the portal.</p></div>
+          <div class="flow-step"><span>05</span><strong>Validate</strong><p>System checks technical and funding rules.</p></div>
+          <div class="flow-step"><span>06</span><strong>Review</strong><p>Employer confirms recipients, amounts, and balance.</p></div>
+          <div class="flow-step"><span>07</span><strong>Send</strong><p>Approved Payouts distribute via Instant ACH.</p></div>
+        </div>
+        <div class="callout callout--blue"><strong>Template instruction:</strong> Select one or more eligible employees before downloading the Excel template. The template includes only the employees selected. After entering net payout amounts, upload the completed template for validation before submitting the Payout.</div>
+      </div>
+    </section>
+
+    <section class="prd-section prd-section--soft" id="rules">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Core business rules</p><h2>Funding controls prevent unsupported Payouts.</h2></div>
+          <p>V1 relies on prefunding, reserve controls, validation, and explicit Employer authorization as primary safeguards.</p>
+        </div>
+
+        <div class="rule-band">
+          <div class="rule-number">&gt; $1K</div>
+          <div class="rule-copy"><h3>Available Balance must remain greater than $1,000.</h3><p>If a Payout would result in a balance of exactly $1,000 or less, the entire batch is paused. Employer must fund the account, reduce payment amounts, or remove recipients.</p></div>
+        </div>
+
+        <table class="data-table">
+          <thead><tr><th>Business rule</th><th>V1 behavior</th></tr></thead>
+          <tbody>
+            <tr><td>Low-balance threshold</td><td>At $1,000, the platform generates a courtesy alert to designated contacts. Failure to receive an alert does not remove the Employer's funding responsibility.</td></tr>
+            <tr><td>Maximum funding balance</td><td>$100,000 unless otherwise approved by Fortuna or modified for applicable banking, regulatory, compliance, or risk requirements.</td></tr>
+            <tr><td>Net amounts only</td><td>Payouts does not calculate gross pay, taxes, withholding, garnishments, deductions, benefits, or payroll filings.</td></tr>
+            <tr><td>Employer authorization</td><td>Submission represents that the payment is authorized, the recipient and Net Payment Amount are correct, payroll/tax calculations are complete, the payment is lawful, and funds are sufficient.</td></tr>
+            <tr><td>Instant ACH</td><td>Describes the intended distribution method. Immediate settlement or availability is not guaranteed.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout--warning"><strong>Example:</strong> Available Balance = $2,350. Proposed Payout = $1,500. Projected Balance = $850. Because $850 is below the operating reserve, the batch cannot proceed.</div>
+      </div>
+    </section>
+
+    <section class="prd-section" id="validation">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Validation</p><h2>Technical validation is not compensation validation.</h2></div>
+          <p>This distinction is central to the V1 product and legal model.</p>
+        </div>
+        <div class="compare-grid">
+          <article class="compare-card compare-card--yes">
+            <h3>Payouts can validate</h3>
+            <ul>
+              <li>Required fields and file structure</li>
+              <li>Employee eligibility</li>
+              <li>Payment format</li>
+              <li>Available Balance</li>
+              <li>Operating reserve</li>
+              <li>Applicable limits</li>
+              <li>Certain duplicate conditions</li>
+              <li>Other supported system rules</li>
+            </ul>
+          </article>
+          <article class="compare-card compare-card--no">
+            <h3>Payouts cannot determine</h3>
+            <ul>
+              <li>Whether the selected employee is the intended employee</li>
+              <li>Whether $100 or $1,000 is the correct amount</li>
+              <li>Whether a tip or commission calculation is correct</li>
+              <li>Whether payroll calculations are correct</li>
+              <li>Whether compensation is legitimately owed beyond Employer authorization</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="prd-section prd-section--dark" id="finality">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Payment finality</p><h2>One-way by design.</h2></div>
+          <p>V1 intentionally prioritizes prevention over remediation because it does not contain a payment-correction engine.</p>
+        </div>
+        <div class="rule-band" style="background:#1c1c20;border:1px solid rgba(255,255,255,.12)">
+          <div class="rule-number">→</div>
+          <div class="rule-copy"><h3>Employer → Employee</h3><p>After final submission and entry into processing, V1 does not provide reversal, recall, employee debit, overpayment recovery, recipient change, Employer reimbursement, payroll offset, or automated correction functionality.</p></div>
+        </div>
+        <div class="callout" style="background:rgba(255,54,215,.1);color:#fff;border-left-color:#ff36d7"><strong style="color:#fff">Recommended final confirmation:</strong><br>Confirm that each employee and Net Payment Amount is correct. Once submitted for processing, payments are final and cannot be reversed, adjusted, recovered, or corrected through Payouts.</div>
+      </div>
+    </section>
+
+    <section class="prd-section" id="exceptions">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Exception model</p><h2>Failed is different from erroneous.</h2></div>
+          <p>Operations and reporting must distinguish a processing failure from a correctly executed but incorrect Employer instruction.</p>
+        </div>
+        <div class="compare-grid">
+          <article class="compare-card compare-card--yes">
+            <h3>Failed Payout</h3>
+            <p>The Employer submitted the intended instruction, but it could not successfully complete.</p>
+            <ul><li>Closed or ineligible destination</li><li>Invalid destination information</li><li>Bank/network rejection</li><li>Compliance or fraud review</li><li>Technical processing failure</li></ul>
+          </article>
+          <article class="compare-card compare-card--no">
+            <h3>Erroneous Payout</h3>
+            <p>The system correctly executed an Employer instruction that was itself wrong.</p>
+            <ul><li>Wrong employee</li><li>Wrong amount</li><li>Overpayment</li><li>Underpayment</li></ul>
+          </article>
+        </div>
+        <div class="callout callout--blue"><strong>Failed Payout handling:</strong> Where applicable, funds should return to Available Balance after failure is confirmed and the relevant settlement/return process completes. V1 should not promise a specific re-credit SLA, automatic retry, or employee notification unless those capabilities are operationally confirmed.</div>
+      </div>
+    </section>
+
+    <section class="prd-section prd-section--soft" id="responsibility">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Responsibility model</p><h2>Clear ownership keeps V1 operationally defensible.</h2></div>
+          <p>The matrix separates Employer decisions, Fortuna program operations, and Grit technology responsibilities.</p>
+        </div>
+        <table class="data-table responsibility-table">
+          <thead><tr><th>Scenario</th><th>Employer</th><th>Fortuna</th><th>Grit</th></tr></thead>
+          <tbody>
+            <tr><td>Determine employee payment</td><td>Responsible</td><td>—</td><td>—</td></tr>
+            <tr><td>Calculate payroll / taxes</td><td>Responsible</td><td>—</td><td>—</td></tr>
+            <tr><td>Select recipient / enter Net Payment Amount</td><td>Responsible</td><td>—</td><td>—</td></tr>
+            <tr><td>Fund Payout account</td><td>Responsible</td><td>Coordinate</td><td>—</td></tr>
+            <tr><td>Maintain Employer relationship</td><td>—</td><td>Responsible</td><td>—</td></tr>
+            <tr><td>Administer Payouts program</td><td>—</td><td>Responsible</td><td>Support platform</td></tr>
+            <tr><td>Execute valid Payment Instruction</td><td>Authorize</td><td>Operate</td><td>Technology responsibility</td></tr>
+            <tr><td>Wrong amount / wrong employee</td><td>Resolve</td><td>Coordinate</td><td>—</td></tr>
+            <tr><td>Employer funding is returned</td><td>Restore funds</td><td>Coordinate</td><td>Reflect / control</td></tr>
+            <tr><td>Destination fails</td><td>Correct as needed</td><td>Support</td><td>Process / report</td></tr>
+            <tr><td>Grit system materially changes submitted instruction</td><td>Cooperate</td><td>Coordinate</td><td>Investigate / remediate technical defect</td></tr>
+            <tr><td>New functionality request</td><td>Request</td><td>Prioritize</td><td>New scope / SOW</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="prd-section" id="scope">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">V1 scope</p><h2>What ships—and what deliberately does not.</h2></div>
+          <p>The scope line should remain consistent across the Employer experience, Fortuna operating procedures, the MSA, the Payouts Agreement, and the Grit–Fortuna product scope.</p>
+        </div>
+        <div class="scope-grid">
+          <article class="scope-card scope-card--in">
+            <h3>In scope</h3>
+            <ul>
+              <li>Direct Employer onboarding</li><li>Employer Payout enablement</li><li>Authorized User management</li><li>Eligible employee selection</li><li>XLSX template generation</li><li>Offline Net Payment Amount entry</li><li>Template upload</li><li>File and eligibility validation</li><li>Available Balance validation</li><li>$1,000 operating reserve</li><li>Funding controls</li><li>Review and confirmation</li><li>Employer authorization</li><li>Instant ACH distribution</li><li>All-In-One / Paycard destination</li><li>Transaction reporting</li><li>Failed Payout visibility</li><li>Auditability</li><li>Low-balance notification</li>
+            </ul>
+          </article>
+          <article class="scope-card scope-card--out">
+            <h3>Out of scope</h3>
+            <ul>
+              <li>Payroll processing</li><li>Tax calculation</li><li>Gross-to-net calculation</li><li>Determining appropriate compensation</li><li>Payment reversal</li><li>ACH recall through Admin Portal</li><li>Employee debit</li><li>Automated overpayment recovery</li><li>Automated payroll offset</li><li>Employer reimbursement</li><li>Employee repayment workflow</li><li>Automated payment correction</li><li>Payroll reconciliation</li><li>Employer / employee compensation dispute resolution</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="prd-section prd-section--soft" id="metrics">
+      <div class="container">
+        <div class="section-intro">
+          <div><p class="eyebrow">Success metrics</p><h2>Measure adoption, reliability, and risk together.</h2></div>
+          <p>V1 should be judged not only by payment volume, but also by whether the workflow reduces operational friction without increasing preventable payment errors.</p>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Dimension</th><th>Executive KPI</th></tr></thead>
+          <tbody>
+            <tr><td>Adoption</td><td>Employers enabled; % completing first Payout; monthly active Payout Employers</td></tr>
+            <tr><td>Usage</td><td>Payout batches/month; employees paid/month; total Payout value; average Payout amount</td></tr>
+            <tr><td>Experience</td><td>Successful template upload rate; validation failure rate; creation-to-submission time; % batches blocked by funding</td></tr>
+            <tr><td>Reliability</td><td>Successful Payout rate; Failed Payout rate; processing latency</td></tr>
+            <tr><td>Risk</td><td>Funding return/reversal rate; reported erroneous-payment incidents; unauthorized-access incidents</td></tr>
+            <tr><td>Operations</td><td>Payout support cases per 1,000 transactions; average resolution time for Failed Payouts</td></tr>
+          </tbody>
+        </table>
+
+        <div class="principles">
+          <article class="principle"><span>01</span><strong>Prefunded</strong><p>Not credit-based.</p></article>
+          <article class="principle"><span>02</span><strong>Distribution</strong><p>Not payroll processing.</p></article>
+          <article class="principle"><span>03</span><strong>Employer-authorized</strong><p>Employer owns payment accuracy.</p></article>
+          <article class="principle"><span>04</span><strong>One-way</strong><p>V1 distributes but does not recover funds.</p></article>
+          <article class="principle"><span>05</span><strong>Prevention first</strong><p>Controls and review precede submission.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="takeaway">
+      <div class="container">
+        <p class="eyebrow eyebrow--light">Executive takeaway</p>
+        <h2>Controlled distribution with <span class="gradient-text">clear boundaries.</span></h2>
+        <div class="takeaway-grid">
+          <article class="takeaway-card"><strong>Employer</strong><p>Determines and authorizes the payment.</p></article>
+          <article class="takeaway-card"><strong>Fortuna</strong><p>Owns the Employer relationship and administers the program.</p></article>
+          <article class="takeaway-card"><strong>Grit</strong><p>Provides the underlying technology that executes valid Payment Instructions.</p></article>
+        </div>
+        <p style="max-width:54rem;margin-top:2rem;color:rgba(255,255,255,.7);font-size:1.08rem">The V1 boundary is deliberate: strong prevention controls without turning Payouts into a payroll engine or payment-recovery platform. Material enhancements should follow the agreed change-control and SOW process between Fortuna and Grit.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="assets/Grit_Logo_RGB.png" width="156" height="65" alt="Grit Financial">
+        <p>Internal product requirements · Fortuna Payouts</p>
+      </div>
+      <div class="footer-nav">
+        <div><h2>Navigate</h2><a href="index.html">Project directory</a><a href="#top">Back to top</a></div>
+        <div><h2>Grit Financial</h2><a href="https://gritfinancial.org" target="_blank" rel="noopener noreferrer">Company website</a></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><p>&copy; <span data-current-year>2026</span> Grit Financial. All rights reserved.</p><a href="#top">Back to top ↑</a></div>
+  </footer>
+
+  <script>
+    (() => {
+      const body = document.body;
+      const toggle = document.querySelector('[data-nav-toggle]');
+      const nav = document.querySelector('[data-nav]');
+      const header = document.querySelector('[data-header]');
+      const year = document.querySelector('[data-current-year]');
+      const closeNav = () => {
+        if (!toggle || !nav) return;
+        toggle.setAttribute('aria-expanded','false');
+        toggle.setAttribute('aria-label','Open navigation');
+        nav.classList.remove('is-open');
+        body.classList.remove('nav-is-open');
+      };
+      if(toggle && nav){
+        toggle.addEventListener('click',()=>{
+          const open=toggle.getAttribute('aria-expanded')!=='true';
+          toggle.setAttribute('aria-expanded',String(open));
+          toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+          nav.classList.toggle('is-open',open);
+          body.classList.toggle('nav-is-open',open);
+        });
+        nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeNav));
+        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNav();});
+      }
+      const updateHeader=()=>header?.classList.toggle('is-scrolled',window.scrollY>12);
+      updateHeader();
+      window.addEventListener('scroll',updateHeader,{passive:true});
+      if(year) year.textContent=String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
