@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>Page not found | Grit Financial</title>
+  <link rel="icon" type="image/png" href="/grinta2021/assets/Grit_FavIcon.png">
+  <style>
+    :root { --ink:#111111; --white:#ffffff; --magenta:#ff36d7; --blue:#3395ff; --muted:#686a72; }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0; display: grid; place-items: center; padding: 28px; color: var(--ink);
+      background: radial-gradient(circle at 15% 10%, rgba(255,54,215,.15), transparent 32%), radial-gradient(circle at 85% 85%, rgba(51,149,255,.15), transparent 34%), #f7f7f9;
+      font-family: "Source Sans 3", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .card { width: min(580px,100%); padding: 34px; border: 1px solid #e5e5ea; border-radius: 22px; background: var(--white); box-shadow: 0 24px 70px rgba(17,17,17,.12); text-align: center; }
+    .logo { width: 150px; max-width: 55%; height: auto; margin-bottom: 24px; }
+    .code { display: inline-flex; margin-bottom: 16px; padding: 7px 11px; border-radius: 999px; color: #8f0e86; background: #fdeafb; font-weight: 800; }
+    h1 { margin: 0 0 12px; font-size: clamp(1.6rem,4vw,2.3rem); }
+    p { margin: 0; color: var(--muted); line-height: 1.55; }
+    .actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 10px 16px; border: 1px solid #d9d9df; border-radius: 999px; color: var(--ink); background: var(--white); font-weight: 750; text-decoration: none; }
+    a.primary { border-color: transparent; background: linear-gradient(105deg,var(--magenta),var(--blue)); }
+  </style>
+  <script>
+    (function () {
+      var path = window.location.pathname.replace(/\/+$/, "").toLowerCase();
+      var complaintPaths = [
+        "/grinta2021/complaint-classification",
+        "/grinta2021/complaint-classification.html"
+      ];
+
+      // Recovery route: even if GitHub Pages serves its 404 handler for the
+      // complaint URL, send the visitor to the complete canonical report.
+      if (complaintPaths.indexOf(path) !== -1) {
+        window.location.replace(
+          "https://grit-financial.github.io/neil_strategy/projects/complaint-classification.html"
+        );
+      }
+    }());
+  </script>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="/grinta2021/assets/Grit_Logo_RGB.png" alt="Grit Financial">
+    <div class="code">404</div>
+    <h1>This page could not be found.</h1>
+    <p>The project may have moved, or the address may be incomplete.</p>
+    <div class="actions">
+      <a class="primary" href="/grinta2021/">View all projects</a>
+      <a href="https://gritfinancial.org/">Grit Financial</a>
+    </div>
+  </main>
+</body>
+</html>
